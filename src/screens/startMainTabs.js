@@ -3,21 +3,21 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const startTabs = () => {
     Promise.all([
-        Icon.getImageSource("md-map", 30),
-        Icon.getImageSource("ios-share-alt", 30)
+        Icon.getImageSource("ios-calendar", 30),
+        Icon.getImageSource("ios-settings", 30)
     ]).then(sources => {
         Navigation.startTabBasedApp({
             tabs: [
                 {
                     screen: "tempo-mobile.CalendarScreen",
-                    label: "Calendar Page",
-                    title: "Calendar Page",
+                    label: "Calendar",
+                    title: "Calendar",
                     icon: sources[0]
                 },
                 {
                     screen: "tempo-mobile.SettingsScreen",
-                    label: "SettingsScreen",
-                    title: "SettingsScreen",
+                    label: "Settings",
+                    title: "Settings",
                     icon: sources[1]
                 }
             ]
