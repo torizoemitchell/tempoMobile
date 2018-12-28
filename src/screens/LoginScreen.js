@@ -17,7 +17,7 @@ class LoginScreen extends Component {
                 <Text style={styles.brand}>Tempo</Text>
                 <View style={styles.inputContainer}>
                     <TextInput placeholder="E-mail Address" style={styles.input} />
-                    <TextInput placeholder="Password" style={styles.input} secureTextEntry="true" />
+                    <TextInput placeholder="Password" style={styles.input} secureTextEntry={true} />
                 </View>
                 <View style={styles.buttonContainer}>
                     <Button title="Login" onPress={this.loginHandler} color="midnightblue" fontFamily="HelveticaNeue-UltraLight"/>
