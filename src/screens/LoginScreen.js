@@ -14,6 +14,7 @@ class LoginScreen extends Component {
         return (
             
             <View style={styles.container}>
+                <Image source={require('../../assets/infinity.png')} style={styles.logo}/>
                 <Text style={styles.brand}>Tempo</Text>
                 <View style={styles.inputContainer}>
                     <TextInput placeholder="E-mail Address" style={styles.input} />
@@ -55,6 +56,11 @@ const styles = StyleSheet.create({
     brand: {
         fontSize: 60,
         fontFamily: "HelveticaNeue-UltraLight",
+        paddingTop: 20,
+    },
+    logo: {
+        width: 70,
+        height: 70,
     }
 })
 

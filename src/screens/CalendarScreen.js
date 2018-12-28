@@ -20,9 +20,16 @@ class CalendarScreen extends Component {
                     scrollEnabled={true}
                     // Enable or disable vertical scroll indicator. Default = false
                     showScrollIndicator={true}
-                    markedDates={{
-                        '2018-12-29': {textColor: 'green'}
-                    }}
+                    // Collection of dates that have to be colored in a special way. Default = {}
+                    markedDates={
+                        {
+                            '2019-01-01': { startingDay: true, color: 'green' },
+                            '2019-01-02': { selected: true, color: 'green' },
+                            '2019-01-03': { selected: true, color: 'green' },
+                            '2019-01-04': { endingDay: true, color: 'green'}
+                        }}
+                    // Date marking style [simple/period/multi-dot/custom]. Default = 'simple'
+                    markingType={'period'}
               />
             </View>
         );
