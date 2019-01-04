@@ -6,4 +6,4 @@ Tempo helps women gain ovulation intelligence and predict future cycles. Soon, T
 
 Feb 2019
 
-![alt text](https://raw.githubusercontent.com/torizoemitchell/tempoMobile/tempoMobileSS.png)
+![screenshot](./tempoMobileSS.png)
