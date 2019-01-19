@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { CalendarList } from 'react-native-calendars'
+import { Calendar } from 'react-native-calendars'
 
 class CalendarScreen extends Component {
 
@@ -78,11 +78,17 @@ class CalendarScreen extends Component {
     //1) marked dates for period perdictions
     //2) marked dates for high risk days perdictions
     //adds them to the marked dates object being rendered in the calendar.
-    addPredictionsToMarkedDates = () => {
-        console.log("indicator Dates: ", this.state.indicatorDates)
-        // let highRiskDaysPrediction = this.calculatePeriodPerdiction(this.state.indicatorDates)
+    addPredictionsToMarkedDates = async() => {
+        let periodDatesPrediction = await this.calculatePeriodPrediction(this.state.firstDaysOfPeriods)
+        let highRiskDaysPrediction = await this.calculateHighRiskDaysPrediction(this.state.indicatorDates, this.state.firstDaysOfPeriods)
         
-        // console.log("marked Dates for HR day prediction: ",  highRiskDaysPrediction)
+        console.log("marked Dates for periods day prediction: ",  periodDatesPrediction)
+        let newMarkedDates = Object.assign(this.state.markedDates, periodDatesPrediction)
+        console.log("setting state with new marked dates: ", newMarkedDates)
+        this.setState({
+            ...this.state,
+            markedDates: newMarkedDates
+        })
 
     }
 
@@ -90,6 +96,7 @@ class CalendarScreen extends Component {
     //returns an object that will become the marked dates object for the users period. 
     checkPeriodDays = (arrayOfEntries) =>{
         let markedDates = {}
+        let firstDaysOfPeriods = []
         for (i = 0; i < arrayOfEntries.length; i++) {
             let currentEntry = arrayOfEntries[i]
             let previousEntry = arrayOfEntries[i-1]
@@ -97,10 +104,12 @@ class CalendarScreen extends Component {
             //if the first record is true for flow, make it the starting day
             if (i === 0 && currentEntry.flow) {
                 markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a' }
+                firstDaysOfPeriods.push(currentEntry.date)
             }
             //check if it's a start date
             else if (i > 0 && currentEntry.flow && !previousEntry.flow) {
                 markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a' }
+                firstDaysOfPeriods.push(currentEntry.date)
             }
             //check if flow is true on the current day
             else if (currentEntry.flow) {
@@ -111,6 +120,10 @@ class CalendarScreen extends Component {
                 markedDates[previousEntry.date] = { endingDay: true, color: '#e97a7a' }
             }
         }
+        this.setState({
+            ...this.state,
+            firstDaysOfPeriods: firstDaysOfPeriods
+        })
         return markedDates
     }
 
@@ -169,23 +182,87 @@ class CalendarScreen extends Component {
             ModDay1 = this.formatDate(ModDay1)
             markedDates[ModDay1] = { startingDay: true, color: '#ffcc00' }
         }
-
-        console.log("setting state with indicator dates: ", indicatorDates)
         //set state with indicator dates to use for predicting future high risk dates. 
         this.setState({
             ...this.state,
             indicatorDates: indicatorDates
         })
-
-        //console.log("markedDates: ", markedDates)
         return markedDates
     }
 
     //takes an array of dates indicating the first day of the period for each cycle
     //calculates the average cycle length
-    //if the average cycle length is different than what's in the user info, POST the new cycle length to the server. 
-    //returns an object that represents the marked dates for period perdictions 3 months out.
-    calculatePeriodPerdiction = () =>{
+    //if the average cycle length is different than what's in the user info, POST the new cycle length to the server and update the state. 
+    //returns an object that represents the marked dates for period perdictions 3 for months out.
+    calculatePeriodPrediction = (firstDaysOfPeriods) =>{
+        let markedDates = {}
+
+        //cycle length = number of days between the first day of 2 cycles
+        let cycleLengths = []
+        let milliSecsInOneDay = 24 * 60 * 60 * 1000
+        for(let i = 1; i < firstDaysOfPeriods.length; i++){
+            let current = new Date(firstDaysOfPeriods[i])
+            let previous = new Date(firstDaysOfPeriods[i - 1])
+            //calculate the difference between current and previous then push into cycle lengths
+            let daysBetween = Math.round(Math.abs((previous.getTime() - current.getTime()) / (milliSecsInOneDay)))
+            cycleLengths.push(daysBetween)
+        }
+        let sum = cycleLengths.reduce((a, b) => {return a + b})
+        let average = sum/(firstDaysOfPeriods.length - 1)
+
+        //check to see if the average cycle length has changed
+        if(average != this.state.averageCycleLength){
+            //send POST request
+            //......
+
+            //Update state
+            this.setState({
+                ...this.state,
+                averageCycleLength: average
+            })
+        }
+
+        //create period predictions for 3 months out: 
+        let newFirstDays = []
+        let mostRecentFirstDay = new Date(firstDaysOfPeriods[firstDaysOfPeriods.length - 1] + 'T00:00:00-07:00')
+        let accumulator = average
+        for(let i = 0; i < 3; i++){
+            let newFirstDay = new Date()
+            newFirstDay.setDate(mostRecentFirstDay.getDate() + accumulator);
+            accumulator = accumulator + average
+            let formatedNewDate = this.formatDate(newFirstDay)
+            newFirstDays.push(formatedNewDate)
+        }
+        newFirstDays.forEach((day)=>{
+            console.log("day: ", day)
+            
+            markedDates[day] = { startingDay: true, color: '#f4bcbc', endingDay: true, }
+        })
+        return markedDates
+    }
+
+    //************Need the most up-to-date average cycle length before this is executed*******************
+    //takes an array of dates indicating the first day of the period for each cycle
+    //also takes an array of dates indicating the indicator days for each cycle
+    //calculates the average length between the 1st day in the cycle and the indicator day to determine the average day of the cycle on which ovulation occurs. 
+    //if the average is different than what's in the user info, POST the new info to the server and update the state.
+    //returns an object that represents the marked dates for High Risk days perdictions for 3 months out.
+    calculateHighRiskDaysPrediction = (indicatorDates, firstDaysOfPeriods) => {
+        let daysInCyclesWhenOvulOccurred = []
+        console.log("indicator Dates: ", this.state.indicatorDates)
+        console.log("firstDaysOfPeriods: ", this.state.firstDaysOfPeriods)
+        //start calculating the predictions based on whether the arrays are the same length.
+        
+        //if the arrays are the same length, we already know when the next indicator day will occur, it already happened. 
+        //if this is the case, create an predicted first day by adding the cycle length to the most recent first day and predicting High risk days from that. 
+
+        //if the indicator days array is shorter than the first days array, calculate from the most recent first day of period (last one to be found in firstDaysOfPeriods).
+
+        //loop through indicator days and subtract the 1st day in the cycle from each.
+        //record in daysInCyclesWhenOvulOccurred (will be averaged and returned)
+        for(let i = 0; i < indicatorDates.length; i++){
+
+        }
 
     }
 
@@ -206,14 +283,14 @@ class CalendarScreen extends Component {
     }
 
     render() {
+        console.log("marked Dates rendering: ", this.state.markedDates)
         return (
             <View style={styles.container}>
                 <View style={styles.statusSection}>
                     <Text>Hello, {this.state.name ? this.state.name : "loading"}</Text>
-                    <Text> Today: {this.state.currentDate}</Text>
-                    <Text> First Indicator Date: {this.state.indicatorDates[0] ? this.state.indicatorDates[0] : "loading"}</Text>
+                    <Text>Today: {this.state.currentDate}</Text>
                 </View>
-                <CalendarList
+                <Calendar
                     // Max amount of months allowed to scroll to the past. Default = 50
                     pastScrollRange={50}
                     // Max amount of months allowed to scroll to the future. Default = 50
