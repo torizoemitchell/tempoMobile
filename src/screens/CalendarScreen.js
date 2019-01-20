@@ -12,6 +12,7 @@ class CalendarScreen extends Component {
         userEntries: [],
         indicatorDates: [],
         firstDaysOfPeriods: [],
+        predictedFirstDaysOfPeriods: [],
         markedDates: {},
         
     }
@@ -81,10 +82,7 @@ class CalendarScreen extends Component {
     addPredictionsToMarkedDates = async() => {
         let periodDatesPrediction = await this.calculatePeriodPrediction(this.state.firstDaysOfPeriods)
         let highRiskDaysPrediction = await this.calculateHighRiskDaysPrediction(this.state.indicatorDates, this.state.firstDaysOfPeriods)
-        
-        console.log("marked Dates for periods day prediction: ",  periodDatesPrediction)
-        let newMarkedDates = Object.assign(this.state.markedDates, periodDatesPrediction)
-        console.log("setting state with new marked dates: ", newMarkedDates)
+        let newMarkedDates = Object.assign(this.state.markedDates, periodDatesPrediction, highRiskDaysPrediction)
         this.setState({
             ...this.state,
             markedDates: newMarkedDates
@@ -233,9 +231,13 @@ class CalendarScreen extends Component {
             let formatedNewDate = this.formatDate(newFirstDay)
             newFirstDays.push(formatedNewDate)
         }
+        //need newFirstDays in state to use for High Risk Days Predictions
+        this.setState({
+            ...this.state,
+            predictedFirstDaysOfPeriods: newFirstDays
+        })
+
         newFirstDays.forEach((day)=>{
-            console.log("day: ", day)
-            
             markedDates[day] = { startingDay: true, color: '#f4bcbc', endingDay: true, }
         })
         return markedDates
@@ -248,21 +250,92 @@ class CalendarScreen extends Component {
     //if the average is different than what's in the user info, POST the new info to the server and update the state.
     //returns an object that represents the marked dates for High Risk days perdictions for 3 months out.
     calculateHighRiskDaysPrediction = (indicatorDates, firstDaysOfPeriods) => {
-        let daysInCyclesWhenOvulOccurred = []
-        console.log("indicator Dates: ", this.state.indicatorDates)
-        console.log("firstDaysOfPeriods: ", this.state.firstDaysOfPeriods)
-        //start calculating the predictions based on whether the arrays are the same length.
+        let markedDates = {}
+        let avDayInCycleOvulOccurs
+        // console.log("indicator Dates: ", indicatorDates)
+        // console.log("firstDaysOfPeriods: ", firstDaysOfPeriods)
+        // console.log("predicted first days of periods: ", this.state.predictedFirstDaysOfPeriods)
+        //start calculating the predictions/average based on whether the arrays are the same length.
         
-        //if the arrays are the same length, we already know when the next indicator day will occur, it already happened. 
-        //if this is the case, create an predicted first day by adding the cycle length to the most recent first day and predicting High risk days from that. 
-
-        //if the indicator days array is shorter than the first days array, calculate from the most recent first day of period (last one to be found in firstDaysOfPeriods).
-
-        //loop through indicator days and subtract the 1st day in the cycle from each.
-        //record in daysInCyclesWhenOvulOccurred (will be averaged and returned)
-        for(let i = 0; i < indicatorDates.length; i++){
-
+        //if the arrays are the same length, the next indicator day just happened and we have an equal number of indexes to calculate the average with.  
+        if(indicatorDates.length === firstDaysOfPeriods.length){
+            //*************************/EDGE CASE COME BACK TO THISSSSSS
+            //if this is the case use the nearest predicted first day to calculate the distance for the last cycle (indicatorDate - firstDayInPeriod)
         }
+        //if the indicator days array is shorter than the first days array, calculate from the most recent first day of period (last one to be found in firstDaysOfPeriods).
+        else{
+            let daysOnWhichOvulOccured = []
+            for(let i = 0; i < indicatorDates.length; i++){
+                let indicatorDate = new Date(indicatorDates[i] + 'T00:00:00-07:00')
+                let firstDayOfPeriod = new Date(firstDaysOfPeriods[i] + 'T00:00:00-07:00')
+                let days = ((indicatorDate - firstDayOfPeriod)/ (1000 * 60 * 60 * 24))
+                daysOnWhichOvulOccured.push(days)
+            }
+            let sum = daysOnWhichOvulOccured.reduce((a, b) => {return a + b})
+            avDayInCycleOvulOccurs = (sum / daysOnWhichOvulOccured.length)
+        }
+
+        //create object with marked dates for prediction:
+        //start from the most recent first day of period if the lengths of the argument arrays are not equal.
+        //start from the nearest predicted first day of period if the lengths are the same. 
+        
+        let predictedFirstDaysOfPeriods = [...this.state.predictedFirstDaysOfPeriods]
+        let formatStartDates = []
+        predictedFirstDaysOfPeriods.forEach((date) => { formatStartDates.push(new Date(date + 'T00:00:00-07:00')) })
+
+        //add a different start date if the lengths are the same
+        if(indicatorDates.length != firstDaysOfPeriods.length){
+            let startDate = new Date(firstDaysOfPeriods[firstDaysOfPeriods.length - 1] + 'T00:00:00-07:00')
+            formatStartDates = [startDate, ...formatStartDates]
+        }
+        
+        for (let i = 0; i < formatStartDates.length; i++) {
+            //add the cycle length to the start date = predicted day on which ovul. occurs, #ff9f76
+            let ovulationDay = formatStartDates[i]
+            ovulationDay.setDate(ovulationDay.getDate() + avDayInCycleOvulOccurs)
+            markedDates[this.formatDate(ovulationDay)] = { endingDay: true, color: '#ff9f76' }
+
+            //subtract 1 from ovulation day = High Risk Day 2 #ff9f76
+            console.log("ovulation Day before calculating HRDAY2: ", ovulationDay)
+            let HRDay2 = ovulationDay
+            HRDay2.setDate(HRDay2.getDate() - 1)
+            console.log("HR day 2: ", HRDay2)
+            //HRDay2 = this.formatDate(HRDay2)
+            markedDates[this.formatDate(HRDay2)] = { color: '#ff9f76' }
+
+            //subtract 1 from HRday2 = High Risk Day 1 #ffc176
+            console.log("ovulation Day before calculating HRDAY1: ", ovulationDay)
+            let HRDay1 = HRDay2
+            HRDay1.setDate(HRDay1.getDate() - 1)
+            console.log("HRday 1: ", HRDay1)
+            //HRDay1 = this.formatDate(HRDay1)
+            markedDates[this.formatDate(HRDay1)] = { color: '#ffc176' }
+
+            //subtract 1 from HRDay1 = Moderate Risk Day 3 #ffc176
+            let ModDay3 = HRDay1
+            ModDay3.setDate(ModDay3.getDate() - 1)
+            console.log("ModDay3: ", ModDay3)
+            // ModDay3 = this.formatDate(ModDay3)
+            markedDates[this.formatDate(ModDay3)] = { color: '#ffc176' }
+
+            //subtract 1 from that day = Moderate Risk Day 2 #ffeb9d
+            let ModDay2 = ModDay3
+            ModDay2.setDate(ModDay2.getDate() - 1)
+            console.log("ModDay2: ", ModDay2)
+            // ModDay2 = this.formatDate(ModDay2)
+            markedDates[this.formatDate(ModDay2)] = { color: '#ffeb9d' }
+
+            //subtract 1 from ModDay2 = Moderate Risk Day 1 #ffeb9d
+            let ModDay1 = ModDay2
+            ModDay1.setDate(ModDay1.getDate() - 1)
+            console.log("ModDay1: ", ModDay1)
+            // ModDay1 = this.formatDate(ModDay1)
+            markedDates[this.formatDate(ModDay1)] = { startingDay: true, color: '#ffeb9d' }
+        }
+
+        console.log("markedDates: ", markedDates)
+        return markedDates
+        
 
     }
 
