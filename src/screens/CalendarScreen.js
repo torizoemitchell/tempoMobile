@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Calendar } from 'react-native-calendars'
+import CalendarModal from '../components/CalendarModal'
 
 class CalendarScreen extends Component {
 
@@ -14,6 +15,8 @@ class CalendarScreen extends Component {
         firstDaysOfPeriods: [],
         predictedFirstDaysOfPeriods: [],
         markedDates: {},
+        modalVisible: false,
+        selectedDay: {},
         
     }
     //each time the calendar mounts, 
@@ -252,11 +255,7 @@ class CalendarScreen extends Component {
     calculateHighRiskDaysPrediction = (indicatorDates, firstDaysOfPeriods) => {
         let markedDates = {}
         let avDayInCycleOvulOccurs
-        // console.log("indicator Dates: ", indicatorDates)
-        // console.log("firstDaysOfPeriods: ", firstDaysOfPeriods)
-        // console.log("predicted first days of periods: ", this.state.predictedFirstDaysOfPeriods)
-        //start calculating the predictions/average based on whether the arrays are the same length.
-        
+
         //if the arrays are the same length, the next indicator day just happened and we have an equal number of indexes to calculate the average with.  
         if(indicatorDates.length === firstDaysOfPeriods.length){
             //*************************/EDGE CASE COME BACK TO THISSSSSS
@@ -296,50 +295,32 @@ class CalendarScreen extends Component {
             markedDates[this.formatDate(ovulationDay)] = { endingDay: true, color: '#ff9f76' }
 
             //subtract 1 from ovulation day = High Risk Day 2 #ff9f76
-            console.log("ovulation Day before calculating HRDAY2: ", ovulationDay)
             let HRDay2 = ovulationDay
             HRDay2.setDate(HRDay2.getDate() - 1)
-            console.log("HR day 2: ", HRDay2)
-            //HRDay2 = this.formatDate(HRDay2)
             markedDates[this.formatDate(HRDay2)] = { color: '#ff9f76' }
 
             //subtract 1 from HRday2 = High Risk Day 1 #ffc176
-            console.log("ovulation Day before calculating HRDAY1: ", ovulationDay)
             let HRDay1 = HRDay2
             HRDay1.setDate(HRDay1.getDate() - 1)
-            console.log("HRday 1: ", HRDay1)
-            //HRDay1 = this.formatDate(HRDay1)
             markedDates[this.formatDate(HRDay1)] = { color: '#ffc176' }
 
             //subtract 1 from HRDay1 = Moderate Risk Day 3 #ffc176
             let ModDay3 = HRDay1
             ModDay3.setDate(ModDay3.getDate() - 1)
-            console.log("ModDay3: ", ModDay3)
-            // ModDay3 = this.formatDate(ModDay3)
             markedDates[this.formatDate(ModDay3)] = { color: '#ffc176' }
 
             //subtract 1 from that day = Moderate Risk Day 2 #ffeb9d
             let ModDay2 = ModDay3
             ModDay2.setDate(ModDay2.getDate() - 1)
-            console.log("ModDay2: ", ModDay2)
-            // ModDay2 = this.formatDate(ModDay2)
             markedDates[this.formatDate(ModDay2)] = { color: '#ffeb9d' }
 
             //subtract 1 from ModDay2 = Moderate Risk Day 1 #ffeb9d
             let ModDay1 = ModDay2
             ModDay1.setDate(ModDay1.getDate() - 1)
-            console.log("ModDay1: ", ModDay1)
-            // ModDay1 = this.formatDate(ModDay1)
             markedDates[this.formatDate(ModDay1)] = { startingDay: true, color: '#ffeb9d' }
         }
-
-        console.log("markedDates: ", markedDates)
         return markedDates
-        
-
     }
-
-
 
     //takes type Date 
     //returns type string
@@ -355,15 +336,32 @@ class CalendarScreen extends Component {
         return `${date.toString().substring(11, 15)}-${month}-${date.toString().substring(8, 10)}`
     }
 
+    showModal = (day) => {
+        console.log("called show modal: ", day)
+        console.log("this.state.markedDates", this.state.markedDates)
+        console.log("userEntries: ", this.state.userEntries)
+        //look for the day in userEntries: 
+        let selectedDay = {}
+        this.state.userEntries.forEach((entry) => {
+            if(entry.date === day.dateString){ selectedDay = entry }
+        })
+        console.log("found day: ", selectedDay)
+        this.setState({
+            ...this.state,
+            modalVisible: true,
+            selectedDay: selectedDay
+        })
+    }
+
     render() {
-        console.log("marked Dates rendering: ", this.state.markedDates)
+    
         return (
             <View style={styles.container}>
                 <View style={styles.statusSection}>
                     <Text>Hello, {this.state.name ? this.state.name : "loading"}</Text>
                     <Text>Today: {this.state.currentDate}</Text>
                 </View>
-                <Calendar
+                <Calendar style={styles.calendar}
                     // Max amount of months allowed to scroll to the past. Default = 50
                     pastScrollRange={50}
                     // Max amount of months allowed to scroll to the future. Default = 50
@@ -375,16 +373,13 @@ class CalendarScreen extends Component {
                     // Collection of dates that have to be colored in a special way. Default = {}
                     markedDates={
                         this.state.markedDates ? this.state.markedDates : {}
-                        // {
-                        //     '2019-01-01': { startingDay: true, color: 'green' },
-                        //     '2019-01-02': { selected: false, color: 'green' },
-                        //     '2019-01-03': { selected: false, color: 'green' },
-                        //     '2019-01-04': { endingDay: true, color: 'green'}
-                        // }
                     }
                     // Date marking style [simple/period/multi-dot/custom]. Default = 'simple'
                     markingType={'period'}
+                    onDayPress={(day) => { this.showModal(day); console.log('selected day', day) }}
               />
+                <CalendarModal visible={this.state.modalVisible} selectedDay={this.state.selectedDay}/> 
+
             </View>
         );
     }
@@ -400,6 +395,9 @@ const styles = StyleSheet.create({
     statusSection: {
         height: 100,
         padding: 30,
+    },
+    calendar: {
+        height: "50%",
     }
 })
 
