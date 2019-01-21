@@ -353,6 +353,14 @@ class CalendarScreen extends Component {
         })
     }
 
+    closeModal = () => {
+        console.log("closeModal called")
+        this.setState({
+            ...this.state,
+            modalVisible: false
+        })
+    }
+
     render() {
     
         return (
@@ -378,7 +386,11 @@ class CalendarScreen extends Component {
                     markingType={'period'}
                     onDayPress={(day) => { this.showModal(day); console.log('selected day', day) }}
               />
-                <CalendarModal visible={this.state.modalVisible} selectedDay={this.state.selectedDay}/> 
+                <CalendarModal 
+                    visible={this.state.modalVisible} 
+                    selectedDay={this.state.selectedDay}
+                    closeModal={this.closeModal}
+                /> 
 
             </View>
         );
