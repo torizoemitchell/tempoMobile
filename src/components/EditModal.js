@@ -9,10 +9,6 @@ export default class EditModal extends Component {
         temp: this.props.selectedDay.temp,
     }
 
-    componentDidMount = () => {
-
-    }
-
     displayDate = (date) => {
         let dateObject = new Date(date + 'T00:00:00-07:00')
         return dateObject.toString().substring(0, 15)
@@ -26,11 +22,7 @@ export default class EditModal extends Component {
     }
 
     render() {
-        const {
-            date,
-            flow,
-            temp
-        } = this.props.selectedDay
+        const {date} = this.props.selectedDay
         return (
             <Modal
                 animationType="fade"
@@ -52,13 +44,14 @@ export default class EditModal extends Component {
                         </View>
                         <View style={styles.inputFields}>
                             <Text style={styles.statusInfo}>Temp: </Text>
-                            <TextInput value={this.state.temp} style={styles.input}/>
+                            <TextInput value={this.state.temp} style={styles.input} onChangeText={(text) =>{this.setState({...this.state, temp: text})}}/>
                         </View>
                         
                     
                     <View style={styles.buttonContainer}>
                         <Button title="Submit" onPress={this.loginHandler} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
-                        <Button title="Cancel" onPress={this.closeModal} color="red" fontFamily="HelveticaNeue-UltraLight" />
+                        <Button title="Cancel" onPress={this.props.closeEditModal} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
+                        <Button title="Delete" onPress={this.props.closeEditModal} color="red" fontFamily="HelveticaNeue-UltraLight" />
                     </View>
                 </View>
 
@@ -96,6 +89,8 @@ const styles = StyleSheet.create({
     inputFields: {
         flexDirection: "row",
         padding: 5,
+        alignItems: "center"
+
     },
     input: {
         width: "30%",
@@ -103,5 +98,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         margin: 8,
+        fontFamily: "HelveticaNeue-Light",
+        fontSize: 20
     },
 })

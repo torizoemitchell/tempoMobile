@@ -20,6 +20,13 @@ export default class CalendarModal extends Component {
         })
     }
 
+    closeEditModal = () => {
+        console.log("close Edit Modal")
+        this.setState({
+            editModalVisible: false,
+        })
+    }
+
     render(){
        const {
             date, 
@@ -48,7 +55,7 @@ export default class CalendarModal extends Component {
                         <Button title="Close" onPress={this.props.closeModal} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
                     </View>
                 </View>
-                <EditModal visible={this.state.editModalVisible} selectedDay={this.props.selectedDay}/>
+                <EditModal visible={this.state.editModalVisible} selectedDay={this.props.selectedDay} closeEditModal={this.closeEditModal}/>
                 
             </Modal>
         ); 
