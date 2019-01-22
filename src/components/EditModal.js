@@ -36,18 +36,15 @@ export default class EditModal extends Component {
                     <View style={styles.dateContainer}>
                         <Text style={styles.date}>{this.displayDate(date)}</Text>
                     </View>
-                    
-                        <View style={styles.inputFields}>
-                            <Text style={styles.statusInfo}>Menstruating: No </Text>
-                            <Switch value={this.state.flow} onValueChange={this.toggleFlow}/>
-                            <Text style={styles.statusInfo}> Yes</Text>
-                        </View>
-                        <View style={styles.inputFields}>
-                            <Text style={styles.statusInfo}>Temp: </Text>
-                            <TextInput value={this.state.temp} style={styles.input} onChangeText={(text) =>{this.setState({...this.state, temp: text})}}/>
-                        </View>
-                        
-                    
+                    <View style={styles.inputFields}>
+                        <Text style={styles.statusInfo}>Temp: </Text>
+                        <TextInput value={this.state.temp} style={styles.input} onChangeText={(text) => { this.setState({ ...this.state, temp: text }) }} />
+                    </View>
+                    <View style={styles.inputFields}>
+                        <Text style={styles.statusInfo}>Menstruating: No </Text>
+                        <Switch value={this.state.flow} onValueChange={this.toggleFlow}/>
+                        <Text style={styles.statusInfo}> Yes</Text>
+                    </View>
                     <View style={styles.buttonContainer}>
                         <Button title="Submit" onPress={this.loginHandler} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
                         <Button title="Cancel" onPress={this.props.closeEditModal} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />

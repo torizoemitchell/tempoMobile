@@ -19,11 +19,11 @@ styles = StyleSheet.create({
         
     },
     greetingText: {
-        fontSize: 32,
+        fontSize: 40,
         fontFamily: "HelveticaNeue-UltraLight",
     },
     dateText: {
-        fontSize: 18,
+        fontSize: 24,
         fontFamily: "HelveticaNeue-Light"
     }
 

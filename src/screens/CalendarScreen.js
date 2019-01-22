@@ -9,6 +9,7 @@ class CalendarScreen extends Component {
 
     state = {
         currentDate: '',
+        entryForCurrentDate: {},
         name: '',
         averageCycleLength: 0,
         avDayInCycleOvulOccurs: 0,
@@ -28,19 +29,34 @@ class CalendarScreen extends Component {
     //4) calculate the average day in the cycle that the indicator day occurs & predicted High Risk Days.
     //5) if there is a change in the average cycle length or indicator day, POST the new cycle length or indictor day to user data and update it in state.
     componentDidMount = async() => {
-
+        let today = new Date(Date.now()).toString().substring(0, 15)
         this.setState({
             ...this.state,
-            currentDate: new Date(Date.now()).toString().substring(0, 15)
+            currentDate: today
         })
         await this.getEntries()
         await this.getUserInfo()
-        this.addPredictionsToMarkedDates()
-        
-        
+        this.addPredictionsToMarkedDates()  
+        let entryForToday = this.findEntry(`${this.formatDate(today)}`)
+        console.log("entry for Today: ", entryForToday)
+        this.setState({
+            ...this.state,
+            entryForCurrentDate: entryForToday
+        })
+    }
 
-        
-        
+    //takes a dateString and returns the entry from the user's entry for that day.
+    //returns -1 if the entry is not found. 
+    findEntry = (dateString) => {
+        let entries = [
+            ...this.state.userEntries
+        ]
+        for(let i = 0; i < entries.length; i++){
+            if (entries[i].date == dateString) {
+                return entries[i]
+            }
+        }
+        return -1
     }
 
     //GET request for entries then set state with response
@@ -340,15 +356,11 @@ class CalendarScreen extends Component {
     }
 
     showModal = (day) => {
-        console.log("called show modal: ", day)
-        console.log("this.state.markedDates", this.state.markedDates)
-        console.log("userEntries: ", this.state.userEntries)
         //look for the day in userEntries: 
         let selectedDay = {}
         this.state.userEntries.forEach((entry) => {
             if(entry.date === day.dateString){ selectedDay = entry }
         })
-        console.log("found day: ", selectedDay)
         this.setState({
             ...this.state,
             modalVisible: true,
@@ -357,7 +369,6 @@ class CalendarScreen extends Component {
     }
 
     closeModal = () => {
-        console.log("closeModal called")
         this.setState({
             ...this.state,
             modalVisible: false
@@ -371,7 +382,7 @@ class CalendarScreen extends Component {
                     <Greeting name={this.state.name} currentDate={this.state.currentDate}/>
                 </View>
                 <View style={styles.entrySection}>
-                    <TodaysEntry />
+                    <TodaysEntry entry={this.state.entryForCurrentDate}/>
                 </View>
                 <View style={styles.key}>
                     <Text>Key</Text>
@@ -414,11 +425,10 @@ const styles = StyleSheet.create({
         alignItems: "stretch"
     },
     greetingSection: {
-        height: "15%",
-        padding: 30,
+        height: "20%",
     },
     entrySection: {
-        height: "15%",
+        height: "10%",
         justifyContent: "center",
         alignItems: "center",
     },

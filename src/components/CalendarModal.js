@@ -47,8 +47,8 @@ export default class CalendarModal extends Component {
                         <Text style={styles.date}>{this.displayDate(date)}</Text>
                     </View>
                     <View>
-                        <Text style={styles.statusInfo}>Menstruating: {flow ? "Yes" : "No"}</Text>
                         <Text style={styles.statusInfo}>Temp: {temp}</Text>
+                        <Text style={styles.statusInfo}>Menstruating: {flow ? "Yes" : "No"}</Text>
                     </View>
                     <View style={styles.buttonContainer}>
                         <Button title="Edit" onPress={this.showEditModal} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
