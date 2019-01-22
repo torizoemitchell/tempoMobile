@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, TextInput } from 'react-native';
+import { Button } from 'native-base'
 
 export default class TodaysEntry extends React.Component {
 
@@ -7,11 +8,17 @@ export default class TodaysEntry extends React.Component {
         return(
             <View>
                 <View style={this.styles.container}>
-                    <Text style={this.styles.text}>Temp (F): {props.temp}</Text>
+                    <View style={this.styles.tempContainer}>
+                        <Text style={this.styles.text}>Temp (F):</Text>
+                        <TextInput value={props.temp} style={this.styles.input}/>
+                    </View>
+                    
                     <Text style={this.styles.text}>Menstruating: {props.flow ? "Yes" : "No"}</Text>
                 </View> 
                 <View style={this.styles.container}>
-                    <Button title="Edit" onPress={this.loginHandler} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
+                    <Button block light>
+                        <Text style={this.styles.buttonText}>Edit</Text>
+                    </Button>
                 </View>
 
             </View>
@@ -38,6 +45,24 @@ export default class TodaysEntry extends React.Component {
             justifyContent: "center",
             alignItems: "center",
         },
+        buttonText: {
+            fontFamily: "HelveticaNeue",
+            color: "midnightblue",
+            fontSize: 20,
+        },
+        input: {
+            width: "36%",
+            borderColor: "grey",
+            borderWidth: 1,
+            padding: 4,
+            margin: 2,
+            fontFamily: "HelveticaNeue-Light",
+            fontSize: 18
+        },
+        tempContainer: {
+            flexDirection: "row",
+            alignItems: "center",
+        }
     
     }
 

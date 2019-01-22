@@ -426,10 +426,10 @@ const styles = StyleSheet.create({
         alignItems: "stretch"
     },
     greetingSection: {
-        height: "20%",
+        height: "15%",
     },
     entrySection: {
-        height: "10%",
+        height: "15%",
         justifyContent: "center",
         alignItems: "center",
     },
