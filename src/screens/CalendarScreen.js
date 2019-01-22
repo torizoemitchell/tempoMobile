@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Calendar } from 'react-native-calendars'
 import CalendarModal from '../components/CalendarModal'
+import Greeting from '../components/Greeting'
+// import TodaysEntry from '../components/TodaysEntry'
 
 class CalendarScreen extends Component {
 
@@ -17,8 +19,8 @@ class CalendarScreen extends Component {
         markedDates: {},
         modalVisible: false,
         selectedDay: {},
-        
     }
+
     //each time the calendar mounts, 
     //1) do a request for entries
     //2) calculate the previous periods & high risk days. 
@@ -40,6 +42,7 @@ class CalendarScreen extends Component {
         
         
     }
+
     //GET request for entries then set state with response
     //calls createMarkedDates to combine objects created by helper functions to create the marked Dates object for the calendar. 
     getEntries = async () => {
@@ -362,13 +365,15 @@ class CalendarScreen extends Component {
     }
 
     render() {
-    
         return (
             <View style={styles.container}>
-                <View style={styles.statusSection}>
-                    <Text>Hello, {this.state.name ? this.state.name : "loading"}</Text>
-                    <Text>Today: {this.state.currentDate}</Text>
+                <View style={styles.greetingSection}>
+                    <Greeting name={this.state.name} currentDate={this.state.currentDate}/>
                 </View>
+                <View style={styles.todaysEntry}>
+                   
+                </View>
+
                 <Calendar style={styles.calendar}
                     // Max amount of months allowed to scroll to the past. Default = 50
                     pastScrollRange={50}
@@ -404,12 +409,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "stretch"
     },
-    statusSection: {
-        height: 100,
+    greetingSection: {
+        height: "25%",
         padding: 30,
     },
+    todaysEntry: {
+        height: "20%"
+    },
     calendar: {
-        height: "50%",
+        height: "55%",
+        marginBottom: 20,
     }
 })
 
