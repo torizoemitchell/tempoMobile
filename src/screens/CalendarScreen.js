@@ -4,6 +4,7 @@ import { Calendar } from 'react-native-calendars'
 import CalendarModal from '../components/CalendarModal'
 import Greeting from '../components/Greeting'
 import TodaysEntry from '../components/TodaysEntry'
+import Legend from '../components/Legend'
 
 class CalendarScreen extends Component {
 
@@ -385,7 +386,7 @@ class CalendarScreen extends Component {
                     <TodaysEntry entry={this.state.entryForCurrentDate}/>
                 </View>
                 <View style={styles.key}>
-                    <Text>Key</Text>
+                    <Legend/>
                 </View>
                 
 
