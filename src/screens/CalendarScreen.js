@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { Calendar } from 'react-native-calendars'
 import CalendarModal from '../components/CalendarModal'
 import Greeting from '../components/Greeting'
-// import TodaysEntry from '../components/TodaysEntry'
+import TodaysEntry from '../components/TodaysEntry'
 
 class CalendarScreen extends Component {
 
@@ -370,9 +370,13 @@ class CalendarScreen extends Component {
                 <View style={styles.greetingSection}>
                     <Greeting name={this.state.name} currentDate={this.state.currentDate}/>
                 </View>
-                <View style={styles.todaysEntry}>
-                   
+                <View style={styles.entrySection}>
+                    <TodaysEntry />
                 </View>
+                <View style={styles.key}>
+                    <Text>Key</Text>
+                </View>
+                
 
                 <Calendar style={styles.calendar}
                     // Max amount of months allowed to scroll to the past. Default = 50
@@ -410,11 +414,18 @@ const styles = StyleSheet.create({
         alignItems: "stretch"
     },
     greetingSection: {
-        height: "25%",
+        height: "15%",
         padding: 30,
     },
-    todaysEntry: {
-        height: "20%"
+    entrySection: {
+        height: "15%",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    key: {
+        height: "15%",
+        justifyContent: "center",
+        alignItems: "center",
     },
     calendar: {
         height: "55%",

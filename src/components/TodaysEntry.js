@@ -1,17 +1,20 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-export default TodaysEntry = (props) => {
-    return (
-        <View style={styles.entryContainer}>
-            <Text>Entry</Text>
-        </View>
-    )
+export default class TodaysEntry extends React.Component{
+    render(){
+        return (
+            <View>
+                <Text style={{ fontFamily: "HelveticaNeue-UltraLight" }}>Entry</Text>
+            </View>
+        )
+    }
 }
 
-styles = StyleSheet.create({
-    entryContainer: {
-        justifyContent: "center",
-        alignItems: "center",
-    }
-})
+// styles = StyleSheet.create({
+//     text: {
+//         fontFamily: "HelveticaNeue-UltraLight"
+//     }
+// })
+
+
