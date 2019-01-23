@@ -16,14 +16,15 @@ styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         flex: 1,
+        marginTop: 10,
         
     },
     greetingText: {
-        fontSize: 36,
+        fontSize: 32,
         fontFamily: "HelveticaNeue-UltraLight",
     },
     dateText: {
-        fontSize: 22,
+        fontSize: 20,
         fontFamily: "HelveticaNeue-Light"
     }
 

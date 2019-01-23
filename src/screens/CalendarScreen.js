@@ -44,6 +44,7 @@ class CalendarScreen extends Component {
             ...this.state,
             entryForCurrentDate: entryForToday
         })
+
     }
 
     //takes a dateString and returns the entry from the user's entry for that day.

@@ -3,12 +3,15 @@ import { Text, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default class Legend extends React.Component {
+
+
     
     render(){
         return (
             <View>
                 <View style={this.styles.title}>
-                    <Text style={this.styles.titleText}>Risk of Pregnancy</Text>
+                    <Text style={this.styles.titleText}>Risk of Pregnancy Today: </Text>
+                    <Text>*risk today*</Text>
                 </View>
                 
                 
@@ -59,6 +62,7 @@ export default class Legend extends React.Component {
         title: {
             alignItems: "center",
             marginBottom: 5,
+            flexDirection: "row"
         },
         titleText: {
             fontFamily: "HelveticaNeue-Light",
