@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet, Button } from 'react-native';
+import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import EditModal from './EditModal'
+import { Button } from 'native-base'
 
 export default class CalendarModal extends Component {
 
@@ -47,12 +48,23 @@ export default class CalendarModal extends Component {
                         <Text style={styles.date}>{this.displayDate(date)}</Text>
                     </View>
                     <View>
-                        <Text style={styles.statusInfo}>Temp: {temp}</Text>
-                        <Text style={styles.statusInfo}>Menstruating: {flow ? "Yes" : "No"}</Text>
+                        <View style={styles.tempContainer}>
+                            <Text style={styles.statusInfo}>Temp(F): </Text>
+                            <Text style={styles.tempInput}>{temp}</Text>
+                        </View>
+                        <View style={styles.tempContainer}>
+                            <Text style={styles.statusInfo}>Menstruating: </Text>
+                            <Text style={styles.flowInput}>{flow ? "Yes" : "No"}</Text>
+                        </View>
+                        
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Button title="Edit" onPress={this.showEditModal} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
-                        <Button title="Close" onPress={this.props.closeModal} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
+                        <Button block light onPress={this.showEditModal} style={styles.button}>
+                            <Text style={styles.buttonText}>Edit</Text>
+                        </Button>
+                        <Button block light onPress={this.props.closeModal} style={styles.button}>
+                            <Text style={styles.buttonText}>Close</Text>
+                        </Button>
                     </View>
                 </View>
                 <EditModal visible={this.state.editModalVisible} selectedDay={this.props.selectedDay} closeEditModal={this.closeEditModal}/>
@@ -71,11 +83,19 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     buttonContainer: {
-        width: "100%",
+        width: "78%",
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "center",
-        margin: 20
+        alignItems: "center" 
+    },
+    buttonText: {
+        fontFamily: "HelveticaNeue",
+        color: "midnightblue",
+        fontSize: 20,
+    },
+    button: {
+        margin: 2,
+        width: "50%"
     },
     dateContainer: {
         marginBottom: 35,
@@ -87,5 +107,28 @@ const styles = StyleSheet.create({
     statusInfo: {
         fontSize: 24,
         fontFamily: "HelveticaNeue-Light"
+    },
+    tempInput: {
+        width: "50%",
+        borderColor: "grey",
+        borderWidth: 1,
+        padding: 10,
+        margin: 8,
+        fontFamily: "HelveticaNeue-Light",
+        fontSize: 20
+    },
+    tempContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    flowInput: {
+        width: "35%",
+        borderColor: "grey",
+        borderWidth: 1,
+        padding: 10,
+        margin: 8,
+        fontFamily: "HelveticaNeue-Light",
+        fontSize: 20
     }
 })

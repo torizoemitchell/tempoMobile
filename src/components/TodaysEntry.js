@@ -1,8 +1,13 @@
 import React from 'react';
 import { Text, View, TextInput } from 'react-native';
 import { Button } from 'native-base'
+import EditModal from './EditModal'
 
 export default class TodaysEntry extends React.Component {
+
+    state = {
+        editModalVisible: false,
+    }
 
     tempExists = (props) => {
         return(
@@ -20,7 +25,7 @@ export default class TodaysEntry extends React.Component {
                     
                 </View> 
                 <View style={this.styles.buttonContainer}>
-                    <Button small block light>
+                    <Button small block light onPress={this.showEditModal}>
                         <Text style={this.styles.buttonText}>Edit</Text>
                     </Button>
                 </View>
@@ -37,6 +42,19 @@ export default class TodaysEntry extends React.Component {
                 <Text>Please record your Temperature for today.</Text>
             </View>
         )
+    }
+
+    closeEditModal = () => {
+        console.log("close Edit Modal")
+        this.setState({
+            editModalVisible: false,
+        })
+    }
+
+    showEditModal = () => {
+        this.setState({
+            editModalVisible: true,
+        })
     }
 
     styles = {
@@ -64,7 +82,7 @@ export default class TodaysEntry extends React.Component {
             fontSize: 15
         },
         flowInput: {
-            width: "35%",
+            width: "38%",
             borderColor: "grey",
             borderWidth: 1,
             padding: 4,
@@ -92,6 +110,7 @@ export default class TodaysEntry extends React.Component {
         return (
             <View>
                 {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}
+                <EditModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry}/>
             </View>
         )
     }

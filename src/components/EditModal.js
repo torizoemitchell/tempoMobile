@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet, Button, Switch, TextInput } from 'react-native';
+import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet, Switch, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
+import { Button } from 'native-base'
 
 export default class EditModal extends Component {
 
@@ -8,6 +9,13 @@ export default class EditModal extends Component {
         flow: this.props.selectedDay.flow,
         temp: this.props.selectedDay.temp,
     }
+
+    // componentDidMount = () => {
+    //     this.setState({
+    //         flow: this.props.selectedDay.flow,
+    //         temp: this.props.selectedDay.temp
+    //     })
+    // }
 
     displayDate = (date) => {
         let dateObject = new Date(date + 'T00:00:00-07:00')
@@ -23,6 +31,8 @@ export default class EditModal extends Component {
 
     render() {
         const {date} = this.props.selectedDay
+        console.log("this.props.selectedDay", this.props.selectedDay)
+        console.log("this.state. ", this.state)
         return (
             <Modal
                 animationType="fade"
@@ -38,7 +48,7 @@ export default class EditModal extends Component {
                     </View>
                     <View style={styles.inputFields}>
                         <Text style={styles.statusInfo}>Temp: </Text>
-                        <TextInput value={this.state.temp} style={styles.input} onChangeText={(text) => { this.setState({ ...this.state, temp: text }) }} />
+                        <TextInput placeholder={this.props.selectedDay.temp} value={this.state.temp} style={styles.input} onChangeText={(text) => { this.setState({ ...this.state, temp: text }) }} />
                     </View>
                     <View style={styles.inputFields}>
                         <Text style={styles.statusInfo}>Menstruating: No </Text>
@@ -46,9 +56,16 @@ export default class EditModal extends Component {
                         <Text style={styles.statusInfo}> Yes</Text>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Button title="Submit" onPress={this.loginHandler} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
-                        <Button title="Cancel" onPress={this.props.closeEditModal} color="midnightblue" fontFamily="HelveticaNeue-UltraLight" />
-                        <Button title="Delete" onPress={this.props.closeEditModal} color="red" fontFamily="HelveticaNeue-UltraLight" />
+                        <Button block light onPress={this.loginHandler} style={styles.button}>
+                            <Text style={styles.buttonText}>Submit</Text>
+                        </Button>
+                        <Button block light onPress={this.signUpHandler} style={styles.button}>
+                            <Text style={styles.deleteButtonText}>Delete</Text>
+                        </Button>
+                        <Button block light onPress={this.props.closeEditModal} style={styles.button}>
+                            <Text style={styles.buttonText}>Close</Text>
+                        </Button>
+                        
                     </View>
                 </View>
 
@@ -71,6 +88,20 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         margin: 20
+    },
+    buttonText: {
+        fontFamily: "HelveticaNeue",
+        color: "midnightblue",
+        fontSize: 20,
+    },
+    deleteButtonText: {
+        fontFamily: "HelveticaNeue",
+        color: "red",
+        fontSize: 20,
+    },
+    button: {
+        margin: 2,
+        width: "30%"
     },
     dateContainer: {
         marginBottom: 35,

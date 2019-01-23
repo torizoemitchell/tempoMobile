@@ -28,7 +28,6 @@ class LoginScreen extends Component {
                     <Button block light onPress={this.signUpHandler}style={styles.button}>
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </Button>
-                    
                 </View>
                 
             </View>
@@ -59,7 +58,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center"   
-           
     },
     buttonText: {
         fontFamily: "HelveticaNeue",
