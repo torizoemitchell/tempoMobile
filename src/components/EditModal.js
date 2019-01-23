@@ -31,8 +31,6 @@ export default class EditModal extends Component {
 
     render() {
         const {date} = this.props.selectedDay
-        console.log("this.props.selectedDay", this.props.selectedDay)
-        console.log("this.state. ", this.state)
         return (
             <Modal
                 animationType="fade"

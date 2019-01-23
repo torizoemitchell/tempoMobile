@@ -106,7 +106,6 @@ export default class TodaysEntry extends React.Component {
             flow,
             temp
         } = this.props.entry
-        console.log("styles: ", styles)
         return (
             <View>
                 {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}

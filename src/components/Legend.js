@@ -11,7 +11,7 @@ export default class Legend extends React.Component {
             <View>
                 <View style={this.styles.title}>
                     <Text style={this.styles.titleText}>Risk of Pregnancy Today: </Text>
-                    <Text>*risk today*</Text>
+                    <Text style={{color: `${this.props.riskForCurrentDate.color}`, fontSize: 18}}>{this.props.riskForCurrentDate.risk}</Text>
                 </View>
                 
                 
@@ -61,17 +61,19 @@ export default class Legend extends React.Component {
         },
         title: {
             alignItems: "center",
-            marginBottom: 5,
-            flexDirection: "row"
+            marginBottom: 8,
+            flexDirection: "row",
+            justifyContent: "center"
         },
         titleText: {
             fontFamily: "HelveticaNeue-Light",
-            fontSize: 16
+            fontSize: 18
         },
         legendText: {
             fontFamily: "HelveticaNeue-Light",
             fontSize: 10
-        }
+        },
+        
        
     }
 

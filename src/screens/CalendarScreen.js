@@ -10,6 +10,7 @@ class CalendarScreen extends Component {
 
     state = {
         currentDate: '',
+        riskForCurrentDate: '',
         entryForCurrentDate: {},
         name: '',
         averageCycleLength: 0,
@@ -40,9 +41,12 @@ class CalendarScreen extends Component {
         this.addPredictionsToMarkedDates()  
         let entryForToday = this.findEntry(`${this.formatDate(today)}`)
         console.log("entry for Today: ", entryForToday)
+        let riskForToday = this.getRiskForToday(this.formatDate(today))
+        console.log("riskforCurrentDate: ", riskForToday)
         this.setState({
             ...this.state,
-            entryForCurrentDate: entryForToday
+            entryForCurrentDate: entryForToday,
+            riskForCurrentDate: riskForToday
         })
 
     }
@@ -236,14 +240,12 @@ class CalendarScreen extends Component {
         if(average != this.state.averageCycleLength){
             //send POST request
             //......
-
             //Update state
             this.setState({
                 ...this.state,
                 averageCycleLength: average
             })
         }
-
         //create period predictions for 3 months out: 
         let newFirstDays = []
         let mostRecentFirstDay = new Date(firstDaysOfPeriods[firstDaysOfPeriods.length - 1] + 'T00:00:00-07:00')
@@ -343,6 +345,38 @@ class CalendarScreen extends Component {
         return markedDates
     }
 
+    //takes a dateString and returns the risk of pregnancy for that date. 
+    //returns a string: Low, Moderate, High or Very High
+    getRiskForToday = (dateString) =>{
+        let markedDateEntry
+        for(entry in this.state.markedDates){
+            if(entry === dateString){
+                markedDateEntry = this.state.markedDates[entry]
+            }
+        }
+        if(markedDateEntry === undefined){
+            return {risk: "Low", color: 'black'}
+        }
+        let retObj = {}
+        switch (markedDateEntry.color){
+            case '#e97a7a': 
+                retObj = { risk: "Low", color: 'black' }
+                break
+            case '#ff4c00':
+                retObj = { risk: "Very High", color: '#ff4c00' }
+                break
+            case '#ff8c00':
+                retObj = { risk: "High", color: '#ff8c00' }
+                break
+            case '#ffcc00':
+                retObj = { risk: "Moderate", color: '#ffcc00'}
+                break
+            default:
+                break
+        }
+        return retObj
+    }
+
     //takes type Date 
     //returns type string
     formatDate = (date) => {
@@ -387,7 +421,7 @@ class CalendarScreen extends Component {
                     <TodaysEntry entry={this.state.entryForCurrentDate}/>
                 </View>
                 <View style={styles.key}>
-                    <Legend/>
+                    <Legend riskForCurrentDate={this.state.riskForCurrentDate}/>
                 </View>
                 
 
