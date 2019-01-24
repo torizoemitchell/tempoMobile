@@ -31,6 +31,11 @@ class CalendarScreen extends Component {
     //4) calculate the average day in the cycle that the indicator day occurs & predicted High Risk Days.
     //5) if there is a change in the average cycle length or indicator day, POST the new cycle length or indictor day to user data and update it in state.
     componentDidMount = async() => {
+        await this.loadCalendar()
+
+    }
+
+    loadCalendar = async() => {
         let today = new Date(Date.now()).toString().substring(0, 15)
         this.setState({
             ...this.state,
@@ -38,7 +43,7 @@ class CalendarScreen extends Component {
         })
         await this.getEntries()
         await this.getUserInfo()
-        this.addPredictionsToMarkedDates()  
+        this.addPredictionsToMarkedDates()
         let entryForToday = await this.findEntry(`${this.formatDate(today)}`)
         console.log("entry for Today: ", entryForToday)
         let riskForToday = await this.getRiskForToday(this.formatDate(today))
@@ -48,7 +53,6 @@ class CalendarScreen extends Component {
             entryForCurrentDate: entryForToday,
             riskForCurrentDate: riskForToday
         })
-
     }
 
     //takes a dateString and returns the entry from the user's entry for that day.
@@ -418,6 +422,8 @@ class CalendarScreen extends Component {
     updateTodaysEntryOnEdit = (newEntry) => {
         //add to marked Dates: remove old entry, insert new entry, sort then save in state.
         console.log("entry to add to marked Dates: ", newEntry)
+        this.loadCalendar()
+
 
     }
 

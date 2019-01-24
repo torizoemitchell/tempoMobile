@@ -57,6 +57,13 @@ export default class TodaysEntry extends React.Component {
         })
     }
 
+    updateTodaysEntryOnEdit = () => {
+        this.closeEditModal()
+        this.props.updateTodaysEntryOnEdit()
+    }
+
+
+
     styles = {
         text: {
             fontSize: 16,
@@ -110,7 +117,7 @@ export default class TodaysEntry extends React.Component {
         return (
             <View>
                 {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}
-                <EditModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry} updateTodaysEntryOnEdit={this.props.updateTodaysEntryOnEdit}/>
+                <EditModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry} updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}/>
             </View>
         )
     }
