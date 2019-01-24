@@ -131,28 +131,52 @@ class CalendarScreen extends Component {
         console.log("user entries: ", arrayOfEntries)
         let markedDates = {}
         let firstDaysOfPeriods = []
-        for (i = 0; i < arrayOfEntries.length; i++) {
+        for (i = 0; i < arrayOfEntries.length - 1; i++) {
             let currentEntry = arrayOfEntries[i]
             let previousEntry = arrayOfEntries[i-1]
+            let nextEntry = arrayOfEntries[i+1]
 
             //if the first record is true for flow, make it the starting day
             if (i === 0 && currentEntry.flow) {
                 markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a' }
                 firstDaysOfPeriods.push(currentEntry.date)
             }
+
+            //check if it's spotting (isolated period day)
+            // else if (i > 0 && currentEntry.flow && !previousEntry.flow && !nextEntry.flow) {
+            //     markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a', endingDay: true }
+                
+            // }
+
             //check if it's a start date
             else if (i > 0 && currentEntry.flow && !previousEntry.flow) {
-                markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a' }
-                firstDaysOfPeriods.push(currentEntry.date)
+                //in this case it's spotting: (isolated period day)
+                if (!nextEntry.flow) {
+                    markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a', endingDay: true }
+                } else {
+                    markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a' }
+                    firstDaysOfPeriods.push(currentEntry.date)
+                }
+                
             }
+
+            //check if it's the end date
+            else if (i > 0 && currentEntry.flow && !nextEntry.flow) {
+                //in this case it's spotting: (isolated period day)
+                if (!previousEntry.flow) {
+                    markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a', endingDay: true }
+                } else {
+                    markedDates[currentEntry.date] = { endingDay: true, color: '#e97a7a' }
+                }
+
+            }
+
             //check if flow is true on the current day
             else if (currentEntry.flow) {
                 markedDates[currentEntry.date] = { color: '#e97a7a' }
             }
-            //check if it's the end date
-            else if (i > 0 && !currentEntry.flow && previousEntry.flow) {
-                markedDates[previousEntry.date] = { endingDay: true, color: '#e97a7a' }
-            }
+
+            
         }
         this.setState({
             ...this.state,
