@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TextInput } from 'react-native';
 import { Button } from 'native-base'
-import EditModal from './EditModal'
+import EditTodayModal from './EditTodayModal'
 
 export default class TodaysEntry extends React.Component {
 
@@ -117,7 +117,7 @@ export default class TodaysEntry extends React.Component {
         return (
             <View>
                 {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}
-                <EditModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry} updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}/>
+                <EditTodayModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry} updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}/>
             </View>
         )
     }

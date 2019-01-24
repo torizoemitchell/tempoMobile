@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
-import EditModal from './EditModal'
+import EditAnotherDayModal from './EditAnotherDayModal'
 import { Button } from 'native-base'
 
 export default class CalendarModal extends Component {
 
     state = {
         editModalVisible: false,
+        flow: this.props.selectedDay.flow,
+        temp: this.props.selectedDay.temp
+        
     }
 
     displayDate = (date) => {
@@ -17,6 +20,7 @@ export default class CalendarModal extends Component {
 
     showEditModal = () => {
         this.setState({
+            ...this.state,
             editModalVisible: true,
         })
     }
@@ -24,8 +28,22 @@ export default class CalendarModal extends Component {
     closeEditModal = () => {
         console.log("close Edit Modal")
         this.setState({
+            ...this.state,
             editModalVisible: false,
         })
+    }
+
+    updateAnotherEntryOnEdit = (newEntryData) => {
+        console.log("newEntryData: ", newEntryData)
+        let newFlow = newEntryData.flow
+        let newTemp = newEntryData.temp
+        this.setState({
+            ...this.state,
+            temp: newTemp,
+            flow: newFlow
+        })
+        this.props.updateAnotherEntryOnEdit()
+        this.closeEditModal()
     }
 
     render(){
@@ -34,6 +52,7 @@ export default class CalendarModal extends Component {
             flow, 
             temp 
         } = this.props.selectedDay
+        console.log("CALENDAR MODAL STATE: ", this.state)
         return (
             <Modal
                 animationType="fade"
@@ -50,11 +69,11 @@ export default class CalendarModal extends Component {
                     <View>
                         <View style={styles.tempContainer}>
                             <Text style={styles.statusInfo}>Temp(F): </Text>
-                            <Text style={styles.tempInput}>{temp}</Text>
+                            <Text style={styles.tempInput}>{!this.state.temp ? temp : this.state.temp}</Text>
                         </View>
                         <View style={styles.tempContainer}>
                             <Text style={styles.statusInfo}>Menstruating: </Text>
-                            <Text style={styles.flowInput}>{flow ? "Yes" : "No"}</Text>
+                            <Text style={styles.flowInput}>{(this.state.flow === undefined) ? (flow ? "Yes" : "No") : (this.state.flow ? "Yes" : "No")}</Text>
                         </View>
                         
                     </View>
@@ -67,13 +86,13 @@ export default class CalendarModal extends Component {
                         </Button>
                     </View>
                 </View>
-                <EditModal visible={this.state.editModalVisible} selectedDay={this.props.selectedDay} closeEditModal={this.closeEditModal}/>
-                
+                <EditAnotherDayModal visible={this.state.editModalVisible} selectedDay={this.props.selectedDay} closeEditModal={this.closeEditModal} updateAnotherEntryOnEdit={this.updateAnotherEntryOnEdit} />
             </Modal>
         ); 
     }
     
 }
+
 
 const styles = StyleSheet.create({
     modalContainer: {

@@ -142,12 +142,6 @@ class CalendarScreen extends Component {
                 firstDaysOfPeriods.push(currentEntry.date)
             }
 
-            //check if it's spotting (isolated period day)
-            // else if (i > 0 && currentEntry.flow && !previousEntry.flow && !nextEntry.flow) {
-            //     markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a', endingDay: true }
-                
-            // }
-
             //check if it's a start date
             else if (i > 0 && currentEntry.flow && !previousEntry.flow) {
                 //in this case it's spotting: (isolated period day)
@@ -156,8 +150,7 @@ class CalendarScreen extends Component {
                 } else {
                     markedDates[currentEntry.date] = { startingDay: true, color: '#e97a7a' }
                     firstDaysOfPeriods.push(currentEntry.date)
-                }
-                
+                } 
             }
 
             //check if it's the end date
@@ -168,15 +161,12 @@ class CalendarScreen extends Component {
                 } else {
                     markedDates[currentEntry.date] = { endingDay: true, color: '#e97a7a' }
                 }
-
             }
 
             //check if flow is true on the current day
             else if (currentEntry.flow) {
                 markedDates[currentEntry.date] = { color: '#e97a7a' }
             }
-
-            
         }
         this.setState({
             ...this.state,
@@ -443,13 +433,15 @@ class CalendarScreen extends Component {
         })
     }
 
-    updateTodaysEntryOnEdit = (newEntry) => {
-        //add to marked Dates: remove old entry, insert new entry, sort then save in state.
-        console.log("entry to add to marked Dates: ", newEntry)
+    updateTodaysEntryOnEdit = () => {
         this.loadCalendar()
-
-
     }
+
+    updateAnotherEntryOnEdit = () => {
+        this.loadCalendar()
+        this.closeModal()
+    }
+
 
     render() {
         console.log("markedDates: ", this.state.markedDates)
@@ -487,6 +479,7 @@ class CalendarScreen extends Component {
                     visible={this.state.modalVisible} 
                     selectedDay={this.state.selectedDay}
                     closeModal={this.closeModal}
+                    updateAnotherEntryOnEdit={this.updateAnotherEntryOnEdit}
                 /> 
 
             </View>

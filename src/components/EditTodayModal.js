@@ -3,7 +3,7 @@ import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet, Switch, TextI
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Button } from 'native-base'
 
-export default class EditModal extends Component {
+export default class EditTodayModal extends Component {
 
     state = {
         flow: this.props.selectedDay.flow,
@@ -35,6 +35,7 @@ export default class EditModal extends Component {
         })
         const jsonResponse = await response.json()
         console.log("jsonResponse to update request: ", jsonResponse)
+        console.log("this.props: ", this.props)
         this.props.updateTodaysEntryOnEdit(jsonResponse)
     }
 
