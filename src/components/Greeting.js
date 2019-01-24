@@ -20,8 +20,8 @@ styles = StyleSheet.create({
         
     },
     greetingText: {
-        fontSize: 32,
-        fontFamily: "HelveticaNeue-UltraLight",
+        fontSize: 35,
+        fontFamily: "HelveticaNeue-Light",
     },
     dateText: {
         fontSize: 20,

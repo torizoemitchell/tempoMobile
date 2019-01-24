@@ -7,15 +7,36 @@ export default class EditModal extends Component {
 
     state = {
         flow: this.props.selectedDay.flow,
-        temp: this.props.selectedDay.temp,
+        temp: this.props.selectedDay.temp
     }
 
-    // componentDidMount = () => {
-    //     this.setState({
-    //         flow: this.props.selectedDay.flow,
-    //         temp: this.props.selectedDay.temp
-    //     })
-    // }
+    updateRequest = async() =>{
+        let entryId = this.props.selectedDay.id
+        console.log("entry Id: ", entryId)
+        //check to make sure a change has been made, show an error if not.
+        if(this.state.flow === undefined && this.state.temp === undefined){
+            Alert.alert('Error','Please enter your changes before submitting.', [{ text: 'OK'},])
+            return
+        }
+        
+        let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
+        console.log("requestURL: ", requestURL)
+        console.log("state: ", this.state)
+        const response = await fetch(`${requestURL}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                flow: this.state.flow,
+                temp: this.state.temp,
+            })  
+        })
+        const jsonResponse = await response.json()
+        console.log("jsonResponse to update request: ", jsonResponse)
+        this.props.updateTodaysEntryOnEdit(jsonResponse)
+    }
 
     displayDate = (date) => {
         let dateObject = new Date(date + 'T00:00:00-07:00')
@@ -30,7 +51,9 @@ export default class EditModal extends Component {
     }
 
     render() {
-        const {date} = this.props.selectedDay
+        const {date, id} = this.props.selectedDay
+        console.log("EDIT MODAL this.props.selectedDay: ", this.props.selectedDay)
+    
         return (
             <Modal
                 animationType="fade"
@@ -46,15 +69,15 @@ export default class EditModal extends Component {
                     </View>
                     <View style={styles.inputFields}>
                         <Text style={styles.statusInfo}>Temp: </Text>
-                        <TextInput placeholder={this.props.selectedDay.temp} value={this.state.temp} style={styles.input} onChangeText={(text) => { this.setState({ ...this.state, temp: text }) }} />
+                        <TextInput value={this.state.temp === undefined ? this.props.selectedDay.temp : this.state.temp} style={styles.input} onChangeText={(text) => { this.setState({ ...this.state, temp: text }) }} />
                     </View>
                     <View style={styles.inputFields}>
                         <Text style={styles.statusInfo}>Menstruating: No </Text>
-                        <Switch value={this.state.flow} onValueChange={this.toggleFlow}/>
+                        <Switch value={this.state.flow === undefined ? this.props.selectedDay.flow : this.state.flow } onValueChange={this.toggleFlow}/>
                         <Text style={styles.statusInfo}> Yes</Text>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Button block light onPress={this.loginHandler} style={styles.button}>
+                        <Button block light onPress={this.updateRequest} style={styles.button}>
                             <Text style={styles.buttonText}>Submit</Text>
                         </Button>
                         <Button block light onPress={this.signUpHandler} style={styles.button}>

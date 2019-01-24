@@ -39,9 +39,9 @@ class CalendarScreen extends Component {
         await this.getEntries()
         await this.getUserInfo()
         this.addPredictionsToMarkedDates()  
-        let entryForToday = this.findEntry(`${this.formatDate(today)}`)
+        let entryForToday = await this.findEntry(`${this.formatDate(today)}`)
         console.log("entry for Today: ", entryForToday)
-        let riskForToday = this.getRiskForToday(this.formatDate(today))
+        let riskForToday = await this.getRiskForToday(this.formatDate(today))
         console.log("riskforCurrentDate: ", riskForToday)
         this.setState({
             ...this.state,
@@ -71,10 +71,13 @@ class CalendarScreen extends Component {
         const response = await fetch('http://localhost:3000/entries/1')
         const jsonResponse = await response.json()
         console.log("jsonResponse: ", jsonResponse)
+        let sortedEntriesById = jsonResponse
+        sortedEntriesById.sort((a, b) => { return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0)})
+        console.log("sortedEntriesById: ", sortedEntriesById)
         let dates = this.createMarkedDates(jsonResponse)
         this.setState({
             ...this.state,
-            userEntries: jsonResponse,
+            userEntries: sortedEntriesById,
             markedDates: dates,
         })
     }
@@ -121,6 +124,7 @@ class CalendarScreen extends Component {
     //helper function called by createMarkedDates
     //returns an object that will become the marked dates object for the users period. 
     checkPeriodDays = (arrayOfEntries) =>{
+        console.log("user entries: ", arrayOfEntries)
         let markedDates = {}
         let firstDaysOfPeriods = []
         for (i = 0; i < arrayOfEntries.length; i++) {
@@ -411,14 +415,21 @@ class CalendarScreen extends Component {
         })
     }
 
+    updateTodaysEntryOnEdit = (newEntry) => {
+        //add to marked Dates: remove old entry, insert new entry, sort then save in state.
+        console.log("entry to add to marked Dates: ", newEntry)
+
+    }
+
     render() {
+        console.log("markedDates: ", this.state.markedDates)
         return (
             <View style={styles.container}>
                 <View style={styles.greetingSection}>
                     <Greeting name={this.state.name} currentDate={this.state.currentDate}/>
                 </View>
                 <View style={styles.entrySection}>
-                    <TodaysEntry entry={this.state.entryForCurrentDate}/>
+                    <TodaysEntry entry={this.state.entryForCurrentDate} updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}/>
                 </View>
                 <View style={styles.key}>
                     <Legend riskForCurrentDate={this.state.riskForCurrentDate}/>

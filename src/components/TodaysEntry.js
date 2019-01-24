@@ -106,10 +106,11 @@ export default class TodaysEntry extends React.Component {
             flow,
             temp
         } = this.props.entry
+        console.log("TODAYS ENTRY this.props.entry: ", this.props.entry)
         return (
             <View>
                 {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}
-                <EditModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry}/>
+                <EditModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry} updateTodaysEntryOnEdit={this.props.updateTodaysEntryOnEdit}/>
             </View>
         )
     }
