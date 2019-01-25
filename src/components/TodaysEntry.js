@@ -12,18 +12,25 @@ export default class TodaysEntry extends React.Component {
     tempExists = (props) => {
         return(
             <View>
+
                 <View style={this.styles.container}>
+
                     <View style={this.styles.tempContainer}>
                         <Text style={this.styles.text}>Temp (F): </Text>
-                        <Text style={this.styles.tempInput}>{props.temp}</Text>
+                        <Text style={this.styles.tempInput}>
+                            {props.temp}
+                        </Text>
                     </View>
                     
                     <View style={this.styles.tempContainer}>
                         <Text style={this.styles.text}>Menstruating: </Text>
-                        <Text style={this.styles.flowInput}>{props.flow ? "Yes" : "No"}</Text>
+                        <Text style={this.styles.flowInput}>
+                            {props.flow ? "Yes" : "No"}
+                        </Text>
                     </View>
                     
                 </View> 
+
                 <View style={this.styles.buttonContainer}>
                     <Button small block light onPress={this.showEditModal}>
                         <Text style={this.styles.buttonText}>Edit</Text>
@@ -31,11 +38,10 @@ export default class TodaysEntry extends React.Component {
                 </View>
 
             </View>
-           
-          
         )
     }
 
+    //if the temp does not exist, display a reminder and an input box to optionally put in the temperature manually. 
     tempDoesNotExist = () => {
         return(
             <View>
@@ -62,7 +68,27 @@ export default class TodaysEntry extends React.Component {
         this.props.updateTodaysEntryOnEdit()
     }
 
+    render(){
+        const {
+            flow,
+            temp
+        } = this.props.entry
+        
+        return (
+            <View>
 
+                {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}
+
+                <EditTodayModal 
+                    visible={this.state.editModalVisible} 
+                    closeEditModal={this.closeEditModal} 
+                    selectedDay={this.props.entry} 
+                    updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}
+                />
+
+            </View>
+        )
+    }
 
     styles = {
         text: {
@@ -102,24 +128,10 @@ export default class TodaysEntry extends React.Component {
             alignItems: "center",
             justifyContent: "space-between"
         },
-        buttonContainer:{
+        buttonContainer: {
             margin: 5
         }
-    
-    }
 
-    render(){
-        const {
-            flow,
-            temp
-        } = this.props.entry
-        console.log("TODAYS ENTRY this.props.entry: ", this.props.entry)
-        return (
-            <View>
-                {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}
-                <EditTodayModal visible={this.state.editModalVisible} closeEditModal={this.closeEditModal} selectedDay={this.props.entry} updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}/>
-            </View>
-        )
     }
 }
 

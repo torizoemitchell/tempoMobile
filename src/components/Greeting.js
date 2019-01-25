@@ -4,8 +4,12 @@ import { Text, View, StyleSheet } from 'react-native';
 export default Greeting = (props) => {
     return (
         <View style={styles.greetingContainer}>
-            <Text style={styles.greetingText}>Hello, {props.name ? props.name : ""}.</Text>
-            <Text style={styles.dateText}>{props.currentDate}</Text>
+            <Text style={styles.greetingText}>
+                Hello, {props.name ? props.name : ""}.
+            </Text>
+            <Text style={styles.dateText}>
+                {props.currentDate}
+            </Text>
         </View>
     )
 

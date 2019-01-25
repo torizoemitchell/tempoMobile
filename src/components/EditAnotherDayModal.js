@@ -12,7 +12,6 @@ export default class EditAnotherDayModal extends Component {
 
     updateRequest = async () => {
         let entryId = this.props.selectedDay.id
-        console.log("entry Id: ", entryId)
         //check to make sure a change has been made, show an error if not.
         if (this.state.flow === undefined && this.state.temp === undefined) {
             Alert.alert('Error', 'Please enter your changes before submitting.', [{ text: 'OK' },])
@@ -20,8 +19,6 @@ export default class EditAnotherDayModal extends Component {
         }
 
         let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
-        console.log("requestURL: ", requestURL)
-        console.log("state: ", this.state)
         const response = await fetch(`${requestURL}`, {
             method: 'PUT',
             headers: {
@@ -34,8 +31,6 @@ export default class EditAnotherDayModal extends Component {
             })
         })
         const jsonResponse = await response.json()
-        console.log("jsonResponse to update request: ", jsonResponse)
-        console.log("this.props: ", this.props)
         this.props.updateAnotherEntryOnEdit(jsonResponse)
     }
 
@@ -53,8 +48,6 @@ export default class EditAnotherDayModal extends Component {
 
     render() {
         const { date, id } = this.props.selectedDay
-        console.log("EDIT MODAL this.props.selectedDay: ", this.props.selectedDay)
-
         return (
             <Modal
                 animationType="fade"

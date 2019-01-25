@@ -32,7 +32,6 @@ class CalendarScreen extends Component {
     //5) if there is a change in the average cycle length or indicator day, POST the new cycle length or indictor day to user data and update it in state.
     componentDidMount = async() => {
         await this.loadCalendar()
-
     }
 
     loadCalendar = async() => {
@@ -178,6 +177,7 @@ class CalendarScreen extends Component {
     //helper function called by createMarkedDates
     //returns an object that will become the marked dates object for the users High Risk Days. 
     checkHighRiskDays = (arrayOfEntries) => {
+        console.log("CHECK HR DAYS")
         let indicatorDates = []
         let markedDates = {}
         //find increase in temperature
@@ -185,10 +185,11 @@ class CalendarScreen extends Component {
             let currentEntryTemp = arrayOfEntries[i].temp
             let prevEntryTemp = arrayOfEntries[i - 1].temp
             //if temp for current entry is larger than the temp for the previous entry for more than .5 of a degree, this indicates the spike in risk. 
-            if(currentEntryTemp > prevEntryTemp && (currentEntryTemp - prevEntryTemp) > 0.4){
+            if((currentEntryTemp > prevEntryTemp) && (currentEntryTemp - prevEntryTemp) > 0.4){
                 indicatorDates.push(arrayOfEntries[i].date) 
             }
         }
+        console.log("indicator dates: ", indicatorDates)
         //create object of marked periods for high risk days
         for(let i = 0; i < indicatorDates.length; i++){
             //add the time zone when creating date object to get the correct date
@@ -427,6 +428,7 @@ class CalendarScreen extends Component {
     }
 
     closeModal = () => {
+        this.loadCalendar()
         this.setState({
             ...this.state,
             modalVisible: false
@@ -444,20 +446,30 @@ class CalendarScreen extends Component {
 
 
     render() {
-        console.log("markedDates: ", this.state.markedDates)
+        console.log("CALENDAR SCREEN selected day: ", this.state.selectedDay)
         return (
             <View style={styles.container}>
+
                 <View style={styles.greetingSection}>
-                    <Greeting name={this.state.name} currentDate={this.state.currentDate}/>
+                    <Greeting 
+                        name={this.state.name} 
+                        currentDate={this.state.currentDate}
+                    />
                 </View>
+
                 <View style={styles.entrySection}>
-                    <TodaysEntry entry={this.state.entryForCurrentDate} updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}/>
+                    <TodaysEntry 
+                        entry={this.state.entryForCurrentDate} 
+                        updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}
+                    />
                 </View>
+
                 <View style={styles.key}>
-                    <Legend riskForCurrentDate={this.state.riskForCurrentDate}/>
+                    <Legend 
+                        riskForCurrentDate={this.state.riskForCurrentDate}
+                    />
                 </View>
                 
-
                 <Calendar style={styles.calendar}
                     // Max amount of months allowed to scroll to the past. Default = 50
                     pastScrollRange={50}
@@ -474,7 +486,8 @@ class CalendarScreen extends Component {
                     // Date marking style [simple/period/multi-dot/custom]. Default = 'simple'
                     markingType={'period'}
                     onDayPress={(day) => { this.showModal(day); console.log('selected day', day) }}
-              />
+                />
+
                 <CalendarModal 
                     visible={this.state.modalVisible} 
                     selectedDay={this.state.selectedDay}

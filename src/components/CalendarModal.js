@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
-import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet } from 'react-native';
+import { Modal, Text, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import EditAnotherDayModal from './EditAnotherDayModal'
 import { Button } from 'native-base'
 
 export default class CalendarModal extends Component {
 
+
     state = {
         editModalVisible: false,
-        flow: this.props.selectedDay.flow,
-        temp: this.props.selectedDay.temp
+        hasBeenEdited: false,
+        // flow: this.props.selectedDay.flow,
+        // temp: this.props.selectedDay.temp,
         
+    }
+
+    componentWillUnmount = () =>{
+        console.log("UNMOUNTED")
     }
 
     displayDate = (date) => {
@@ -26,7 +32,6 @@ export default class CalendarModal extends Component {
     }
 
     closeEditModal = () => {
-        console.log("close Edit Modal")
         this.setState({
             ...this.state,
             editModalVisible: false,
@@ -34,17 +39,27 @@ export default class CalendarModal extends Component {
     }
 
     updateAnotherEntryOnEdit = (newEntryData) => {
-        console.log("newEntryData: ", newEntryData)
         let newFlow = newEntryData.flow
         let newTemp = newEntryData.temp
         this.setState({
             ...this.state,
+            hasBeenEdited: true,
             temp: newTemp,
             flow: newFlow
         })
-        this.props.updateAnotherEntryOnEdit()
         this.closeEditModal()
+        //this.props.updateAnotherEntryOnEdit()
+        
     }
+
+    closeThisModal = () => {
+        this.setState({
+            ...this.state,
+            hasBeenEdited: false
+        })
+        this.props.closeModal()
+    }
+
 
     render(){
        const {
@@ -52,41 +67,60 @@ export default class CalendarModal extends Component {
             flow, 
             temp 
         } = this.props.selectedDay
-        console.log("CALENDAR MODAL STATE: ", this.state)
+        console.log("CALENDAR MODAL props.selectedDay: ", this.props.selectedDay)
+        console.log("CALENDAR MODAL state: ", this.state)
         return (
             <Modal
                 animationType="fade"
                 transparent={false}
                 visible={this.props.visible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                }}>
+            >
                 <View style={styles.modalContainer}>
+
                     <Icon name='ios-calendar' size={110} />
+
                     <View style={styles.dateContainer}>
                         <Text style={styles.date}>{this.displayDate(date)}</Text>
                     </View>
+
                     <View>
                         <View style={styles.tempContainer}>
                             <Text style={styles.statusInfo}>Temp(F): </Text>
-                            <Text style={styles.tempInput}>{!this.state.temp ? temp : this.state.temp}</Text>
+                            <Text style={styles.tempInput}>
+                                {this.state.hasBeenEdited ? this.state.temp : this.props.selectedDay.temp}
+                            </Text>
                         </View>
+
                         <View style={styles.tempContainer}>
                             <Text style={styles.statusInfo}>Menstruating: </Text>
-                            <Text style={styles.flowInput}>{(this.state.flow === undefined) ? (flow ? "Yes" : "No") : (this.state.flow ? "Yes" : "No")}</Text>
+                            <Text style={styles.flowInput}>
+                                {this.state.hasBeenEdited ? (this.state.flow ? "Yes" : "No") : (this.props.selectedDay.flow ? "Yes" : "No")}
+                            </Text>
                         </View>
-                        
+
                     </View>
+
                     <View style={styles.buttonContainer}>
+
                         <Button block light onPress={this.showEditModal} style={styles.button}>
                             <Text style={styles.buttonText}>Edit</Text>
                         </Button>
-                        <Button block light onPress={this.props.closeModal} style={styles.button}>
+
+                        <Button block light onPress={this.closeThisModal} style={styles.button}>
                             <Text style={styles.buttonText}>Close</Text>
                         </Button>
+
                     </View>
+
                 </View>
-                <EditAnotherDayModal visible={this.state.editModalVisible} selectedDay={this.props.selectedDay} closeEditModal={this.closeEditModal} updateAnotherEntryOnEdit={this.updateAnotherEntryOnEdit} />
+
+                <EditAnotherDayModal 
+                    visible={this.state.editModalVisible} 
+                    selectedDay={this.props.selectedDay} 
+                    closeEditModal={this.closeEditModal} 
+                    updateAnotherEntryOnEdit={this.updateAnotherEntryOnEdit} 
+                />
+
             </Modal>
         ); 
     }
@@ -105,7 +139,8 @@ const styles = StyleSheet.create({
         width: "78%",
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "center" 
+        alignItems: "center",
+        marginTop: 15,
     },
     buttonText: {
         fontFamily: "HelveticaNeue",
@@ -129,8 +164,8 @@ const styles = StyleSheet.create({
     },
     tempInput: {
         width: "50%",
-        borderColor: "grey",
-        borderWidth: 1,
+        // borderColor: "grey",
+        // borderWidth: 1,
         padding: 10,
         margin: 8,
         fontFamily: "HelveticaNeue-Light",
@@ -143,8 +178,8 @@ const styles = StyleSheet.create({
     },
     flowInput: {
         width: "35%",
-        borderColor: "grey",
-        borderWidth: 1,
+        // borderColor: "grey",
+        // borderWidth: 1,
         padding: 10,
         margin: 8,
         fontFamily: "HelveticaNeue-Light",

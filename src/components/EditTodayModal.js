@@ -12,7 +12,6 @@ export default class EditTodayModal extends Component {
 
     updateRequest = async() =>{
         let entryId = this.props.selectedDay.id
-        console.log("entry Id: ", entryId)
         //check to make sure a change has been made, show an error if not.
         if(this.state.flow === undefined && this.state.temp === undefined){
             Alert.alert('Error','Please enter your changes before submitting.', [{ text: 'OK'},])
@@ -20,8 +19,6 @@ export default class EditTodayModal extends Component {
         }
         
         let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
-        console.log("requestURL: ", requestURL)
-        console.log("state: ", this.state)
         const response = await fetch(`${requestURL}`, {
             method: 'PUT',
             headers: {
@@ -34,8 +31,6 @@ export default class EditTodayModal extends Component {
             })  
         })
         const jsonResponse = await response.json()
-        console.log("jsonResponse to update request: ", jsonResponse)
-        console.log("this.props: ", this.props)
         this.props.updateTodaysEntryOnEdit(jsonResponse)
     }
 
@@ -53,8 +48,6 @@ export default class EditTodayModal extends Component {
 
     render() {
         const {date, id} = this.props.selectedDay
-        console.log("EDIT MODAL this.props.selectedDay: ", this.props.selectedDay)
-    
         return (
             <Modal
                 animationType="fade"
@@ -62,33 +55,62 @@ export default class EditTodayModal extends Component {
                 visible={this.props.visible}
                 onRequestClose={() => {
                     Alert.alert('Modal has been closed.');
-                }}>
+                }}
+            >
                 <View style={styles.modalContainer}>
                     <Icon name='ios-calendar' size={110} />
+
                     <View style={styles.dateContainer}>
-                        <Text style={styles.date}>{this.displayDate(date)}</Text>
+                        <Text style={styles.date}>
+                            {this.displayDate(date)}
+                        </Text>
                     </View>
+
                     <View style={styles.inputFields}>
                         <Text style={styles.statusInfo}>Temp: </Text>
                         <TextInput value={this.state.temp === undefined ? this.props.selectedDay.temp : this.state.temp} style={styles.input} onChangeText={(text) => { this.setState({ ...this.state, temp: text }) }} />
                     </View>
+
                     <View style={styles.inputFields}>
-                        <Text style={styles.statusInfo}>Menstruating: No </Text>
-                        <Switch value={this.state.flow === undefined ? this.props.selectedDay.flow : this.state.flow } onValueChange={this.toggleFlow}/>
-                        <Text style={styles.statusInfo}> Yes</Text>
+                        <Text style={styles.statusInfo}>
+                            Menstruating: No 
+                        </Text>
+                        <Switch 
+                            value={this.state.flow === undefined ? this.props.selectedDay.flow : this.state.flow } 
+                            onValueChange={this.toggleFlow}
+                        />
+                        <Text style={styles.statusInfo}> 
+                            Yes
+                        </Text>
                     </View>
+
                     <View style={styles.buttonContainer}>
-                        <Button block light onPress={this.updateRequest} style={styles.button}>
+                        <Button 
+                            block
+                            light 
+                            onPress={this.updateRequest} 
+                            style={styles.button}
+                        >
                             <Text style={styles.buttonText}>Submit</Text>
                         </Button>
-                        <Button block light onPress={this.signUpHandler} style={styles.button}>
+                        <Button 
+                            block 
+                            light 
+                            onPress={this.signUpHandler} 
+                            style={styles.button}
+                        >
                             <Text style={styles.deleteButtonText}>Delete</Text>
                         </Button>
-                        <Button block light onPress={this.props.closeEditModal} style={styles.button}>
+                        <Button 
+                            block 
+                            light 
+                            onPress={this.props.closeEditModal} 
+                            style={styles.button}
+                        >
                             <Text style={styles.buttonText}>Close</Text>
                         </Button>
-                        
                     </View>
+
                 </View>
 
             </Modal>
