@@ -74,13 +74,13 @@ class CalendarScreen extends Component {
         const response = await fetch('http://localhost:3000/entries/1')
         const jsonResponse = await response.json()
         console.log("jsonResponse: ", jsonResponse)
-        let sortedEntriesById = jsonResponse
-        sortedEntriesById.sort((a, b) => { return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0)})
-        console.log("sortedEntriesById: ", sortedEntriesById)
+        let sortedEntriesByDate = jsonResponse
+        sortedEntriesByDate.sort((a, b) => { return (Date.parse(a.date) > Date.parse(b.date)) ? 1 : ((Date.parse(b.date) > Date.parse(a.date)) ? -1 : 0)})
+        console.log("sortedEntriesById: ", sortedEntriesByDate)
         let dates = this.createMarkedDates(jsonResponse)
         this.setState({
             ...this.state,
-            userEntries: sortedEntriesById,
+            userEntries: sortedEntriesByDate,
             markedDates: dates,
         })
     }
@@ -458,8 +458,10 @@ class CalendarScreen extends Component {
 
                 <View style={styles.entrySection}>
                     <TodaysEntry 
+                        userId={1}
                         entry={this.state.entryForCurrentDate} 
                         updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}
+                        selectedDay={this.state.currentDate}
                     />
                 </View>
 

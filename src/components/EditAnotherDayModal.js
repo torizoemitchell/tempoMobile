@@ -53,9 +53,7 @@ export default class EditAnotherDayModal extends Component {
                 animationType="fade"
                 transparent={false}
                 visible={this.props.visible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                }}>
+            >
                 <View style={styles.modalContainer}>
                     <Icon name='ios-calendar' size={110} />
                     <View style={styles.dateContainer}>
