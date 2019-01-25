@@ -26,6 +26,7 @@ styles = StyleSheet.create({
     greetingText: {
         fontSize: 25,
         fontFamily: "HelveticaNeue-Light",
+        marginTop: 5,
     },
     dateText: {
         fontSize: 20,

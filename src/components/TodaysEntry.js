@@ -14,7 +14,7 @@ export default class TodaysEntry extends React.Component {
         console.log("post new entry")
     }
 
-    tempExists = (props) => {
+    completeEntryExists = (props) => {
         return(
             <View>
 
@@ -46,14 +46,14 @@ export default class TodaysEntry extends React.Component {
         )
     }
 
-    //if the temp does not exist, display a reminder and an input box to optionally put in the temperature manually. 
-    tempDoesNotExist = () => {
+    
+    entryDoesNotExist = () => {
         return(
             <View>
                 <View style={this.styles.container}>
 
-                    <View style={this.styles.reminder}>
-                        <Text style={this.styles.text}>Please record your entry for today.</Text>
+                    <View style={this.styles.reminderContainer}>
+                        <Text style={this.styles.reminderText}>Please record your entry for today.</Text>
                     </View>
 
                     <View style={this.styles.inputFields}>
@@ -87,6 +87,35 @@ export default class TodaysEntry extends React.Component {
         )
     }
 
+    getEntryFormat = (temp, flow) => {
+        console.log("getting entry format")
+        //if temp and flow are missing, please record your "entry" and make all text red
+        console.log("temp: ", temp, "flow: ", flow)
+        if(temp === undefined && flow === undefined){
+            console.log("need to display form for entire entry")
+            return this.entryDoesNotExist()
+        }
+        //if the complete entry already exists, show the data with the edit button.
+        else if (temp && flow){
+            console.log("entry has already been completed")
+            return this.completeEntryExists()
+        }
+
+        //if temp exists but flow hasn't been recorded yet
+
+        //if flow exists but temp hasn't been recorded yet. 
+    }
+
+    getColor = (temp, flow) => {
+        if (temp === undefined && flow === undefined) {
+            return "red"
+        }
+        //if the complete entry already exists, show the data with the edit button.
+        else if (temp && flow) {
+            return "black"
+        }
+    }
+
     closeEditModal = () => {
         console.log("close Edit Modal")
         this.setState({
@@ -114,7 +143,7 @@ export default class TodaysEntry extends React.Component {
         return (
             <View>
 
-                {(temp != null) ? this.tempExists(this.props.entry) : this.tempDoesNotExist()}
+                {this.getEntryFormat(temp, flow)}
 
                 <EditTodayModal 
                     visible={this.state.editModalVisible} 
@@ -128,13 +157,13 @@ export default class TodaysEntry extends React.Component {
     }
 
     styles = {
-        text: {
+        reminderText: {
             fontSize: 16,
             fontFamily: "HelveticaNeue-Light",
-            color: "red",
+            color: this.getColor(this.props.entry.temp, this.props.entry.flow),
         },
-        reminder: {
-            paddingTop: 3,
+        reminderContainer: {
+            alignItems: "center",
         },
         container: {
             width: "100%",
@@ -148,7 +177,7 @@ export default class TodaysEntry extends React.Component {
         },
         tempInput: {
             width: "50%",
-            borderColor: "grey",
+            borderColor: this.getColor(this.props.entry.temp, this.props.entry.flow),
             borderWidth: 1,
             padding: 4,
             margin: 2,
@@ -174,7 +203,8 @@ export default class TodaysEntry extends React.Component {
         },
         statusInfo: {
             fontSize: 14,
-            fontFamily: "HelveticaNeue-Light"
+            fontFamily: "HelveticaNeue-Light",
+            color: this.getColor(this.props.entry.temp, this.props.entry.flow)
         },
         inputFields: {
             flexDirection: "row",
@@ -184,12 +214,13 @@ export default class TodaysEntry extends React.Component {
         },
         input: {
             width: "30%",
-            borderColor: "grey",
+            borderColor: this.getColor(this.props.entry.temp, this.props.entry.flow),
             borderWidth: 1,
             padding: 8,
             margin: 3,
             fontFamily: "HelveticaNeue-Light",
-            fontSize: 14
+            fontSize: 14,
+            color: this.getColor(this.props.entry.temp, this.props.entry.flow)
         },
 
     }

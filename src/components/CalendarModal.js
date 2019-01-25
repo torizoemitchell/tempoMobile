@@ -67,8 +67,6 @@ export default class CalendarModal extends Component {
             flow, 
             temp 
         } = this.props.selectedDay
-        console.log("CALENDAR MODAL props.selectedDay: ", this.props.selectedDay)
-        console.log("CALENDAR MODAL state: ", this.state)
         return (
             <Modal
                 animationType="fade"

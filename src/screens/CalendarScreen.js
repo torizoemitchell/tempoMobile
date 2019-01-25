@@ -446,7 +446,6 @@ class CalendarScreen extends Component {
 
 
     render() {
-        console.log("CALENDAR SCREEN selected day: ", this.state.selectedDay)
         return (
             <View style={styles.container}>
 
@@ -511,12 +510,12 @@ const styles = StyleSheet.create({
         height: "10%",
     },
     entrySection: {
-        height: "23%",
+        height: "26%",
         justifyContent: "center",
         alignItems: "center",
     },
     key: {
-        height: "12%",
+        height: "9%",
         justifyContent: "center",
         alignItems: "center",
     },

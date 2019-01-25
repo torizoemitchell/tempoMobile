@@ -6,7 +6,7 @@ export default class Legend extends React.Component {
 
     getRiskStyle = (color) => {
         return {
-            fontSize: 18,
+            fontSize: 16,
             color: color,
         }
     }
@@ -22,26 +22,26 @@ export default class Legend extends React.Component {
                 
                 <View style={this.styles.legendRow}>
     
-                    <Icon name="circle" size={35} color="#e97a7a" />
+                    <Icon name="circle" size={31} color="#e97a7a" />
                     <View style={this.styles.risk}>
                         <Text style={this.styles.legendText}> Period </Text>
                         <Text style={this.styles.legendText}> Day </Text>
                     </View>
                     
-                    <Icon name="circle" size={35} color="#ffcc00" />
+                    <Icon name="circle" size={31} color="#ffcc00" />
                     <View style={this.styles.risk}>
                         <Text style={this.styles.legendText}> Moderate </Text>
                         <Text style={this.styles.legendText}> Risk </Text>
                     </View>
 
                     
-                    <Icon name="circle" size={35} color="#ff8c00" />
+                    <Icon name="circle" size={31} color="#ff8c00" />
                     <View style={this.styles.risk}>
                         <Text style={this.styles.legendText}> High </Text>
                         <Text style={this.styles.legendText}> Risk </Text>
                     </View>
 
-                    <Icon name="circle" size={35} color="#ff4c00" />
+                    <Icon name="circle" size={31} color="#ff4c00" />
                     <View style={this.styles.risk}>
                         <Text style={this.styles.legendText}> Very High </Text>
                         <Text style={this.styles.legendText}> Risk </Text>
@@ -66,13 +66,13 @@ export default class Legend extends React.Component {
         },
         title: {
             alignItems: "center",
-            marginBottom: 8,
+            marginBottom: 10,
             flexDirection: "row",
             justifyContent: "center"
         },
         titleText: {
             fontFamily: "HelveticaNeue-Light",
-            fontSize: 18
+            fontSize: 16
         },
         legendText: {
             fontFamily: "HelveticaNeue-Light",
