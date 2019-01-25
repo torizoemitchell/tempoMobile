@@ -155,11 +155,11 @@ const styles = StyleSheet.create({
         marginBottom: 35,
     },
     date: {
-        fontSize: 35,
+        fontSize: 28,
         fontFamily: "HelveticaNeue-Light"
     },
     statusInfo: {
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: "HelveticaNeue-Light"
     },
     tempInput: {
@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 8,
         fontFamily: "HelveticaNeue-Light",
-        fontSize: 20
+        fontSize: 20,
+        textDecorationLine: "underline",
     },
     tempContainer: {
         flexDirection: "row",
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 8,
         fontFamily: "HelveticaNeue-Light",
-        fontSize: 20
+        fontSize: 20,
+        textDecorationLine: "underline"
     }
 })

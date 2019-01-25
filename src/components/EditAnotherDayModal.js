@@ -122,11 +122,11 @@ const styles = StyleSheet.create({
         marginBottom: 35,
     },
     date: {
-        fontSize: 35,
+        fontSize: 28,
         fontFamily: "HelveticaNeue-Light"
     },
     statusInfo: {
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: "HelveticaNeue-Light"
     },
     inputFields: {

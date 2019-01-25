@@ -508,15 +508,15 @@ const styles = StyleSheet.create({
         alignItems: "stretch"
     },
     greetingSection: {
-        height: "15%",
+        height: "10%",
     },
     entrySection: {
-        height: "15%",
+        height: "23%",
         justifyContent: "center",
         alignItems: "center",
     },
     key: {
-        height: "15%",
+        height: "12%",
         justifyContent: "center",
         alignItems: "center",
     },

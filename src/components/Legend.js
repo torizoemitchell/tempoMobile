@@ -4,14 +4,19 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default class Legend extends React.Component {
 
-
+    getRiskStyle = (color) => {
+        return {
+            fontSize: 18,
+            color: color,
+        }
+    }
     
     render(){
         return (
             <View>
                 <View style={this.styles.title}>
                     <Text style={this.styles.titleText}>Risk of Pregnancy Today: </Text>
-                    <Text style={{color: `${this.props.riskForCurrentDate.color}`, fontSize: 18}}>{this.props.riskForCurrentDate.risk}</Text>
+                    <Text style={this.getRiskStyle(this.props.riskForCurrentDate.color)}>{this.props.riskForCurrentDate.risk}</Text>
                 </View>
                 
                 

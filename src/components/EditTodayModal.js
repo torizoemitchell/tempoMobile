@@ -72,16 +72,12 @@ export default class EditTodayModal extends Component {
                     </View>
 
                     <View style={styles.inputFields}>
-                        <Text style={styles.statusInfo}>
-                            Menstruating: No 
-                        </Text>
+                        <Text style={styles.statusInfo}>Menstruating: No </Text>
                         <Switch 
                             value={this.state.flow === undefined ? this.props.selectedDay.flow : this.state.flow } 
                             onValueChange={this.toggleFlow}
                         />
-                        <Text style={styles.statusInfo}> 
-                            Yes
-                        </Text>
+                        <Text style={styles.statusInfo}> Yes</Text>
                     </View>
 
                     <View style={styles.buttonContainer}>
@@ -151,11 +147,11 @@ const styles = StyleSheet.create({
         marginBottom: 35,
     },
     date: {
-        fontSize: 35,
+        fontSize: 28,
         fontFamily: "HelveticaNeue-Light"
     },
     statusInfo: {
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: "HelveticaNeue-Light"
     },
     inputFields: {

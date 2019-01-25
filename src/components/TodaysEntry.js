@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TextInput } from 'react-native';
+import { Text, View, TextInput, Switch } from 'react-native';
 import { Button } from 'native-base'
 import EditTodayModal from './EditTodayModal'
 
@@ -7,6 +7,11 @@ export default class TodaysEntry extends React.Component {
 
     state = {
         editModalVisible: false,
+        entryForToday: ''
+    }
+
+    postNewEntry = () => {
+        console.log("post new entry")
     }
 
     tempExists = (props) => {
@@ -45,8 +50,40 @@ export default class TodaysEntry extends React.Component {
     tempDoesNotExist = () => {
         return(
             <View>
-                <Text>Please record your Temperature for today.</Text>
+                <View style={this.styles.container}>
+
+                    <View style={this.styles.reminder}>
+                        <Text style={this.styles.text}>Please record your entry for today.</Text>
+                    </View>
+
+                    <View style={this.styles.inputFields}>
+                        <Text style={this.styles.statusInfo}>Temp: </Text>
+                        <TextInput
+                            value={this.state.entryForToday}
+                            style={this.styles.input}
+                            onChangeText={(text) => { this.setState({ ...this.state, entryForToday: text }) }} />
+                    </View>
+
+                    <View style={this.styles.inputFields}>
+                        <Text style={this.styles.statusInfo}>Menstruating: No </Text>
+                        <Switch
+                            value={false}
+                            onValueChange={console.log("toggle")}
+                        />
+                        <Text style={this.styles.statusInfo}> Yes</Text>
+                    </View>
+
+                </View>
+
+                <View style={this.styles.buttonContainer}>
+                    <Button small block light onPress={this.postNewEntry}>
+                        <Text style={this.styles.buttonText}>Submit</Text>
+                    </Button>
+                </View>
+
             </View>
+            
+            
         )
     }
 
@@ -73,7 +110,7 @@ export default class TodaysEntry extends React.Component {
             flow,
             temp
         } = this.props.entry
-        
+
         return (
             <View>
 
@@ -93,7 +130,11 @@ export default class TodaysEntry extends React.Component {
     styles = {
         text: {
             fontSize: 16,
-            fontFamily: "HelveticaNeue-Light"
+            fontFamily: "HelveticaNeue-Light",
+            color: "red",
+        },
+        reminder: {
+            paddingTop: 3,
         },
         container: {
             width: "100%",
@@ -130,7 +171,26 @@ export default class TodaysEntry extends React.Component {
         },
         buttonContainer: {
             margin: 5
-        }
+        },
+        statusInfo: {
+            fontSize: 14,
+            fontFamily: "HelveticaNeue-Light"
+        },
+        inputFields: {
+            flexDirection: "row",
+            padding: 5,
+            alignItems: "center"
+
+        },
+        input: {
+            width: "30%",
+            borderColor: "grey",
+            borderWidth: 1,
+            padding: 8,
+            margin: 3,
+            fontFamily: "HelveticaNeue-Light",
+            fontSize: 14
+        },
 
     }
 }
