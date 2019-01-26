@@ -17,7 +17,6 @@ export default class EditTodayModal extends Component {
             Alert.alert('Error','Please enter your changes before submitting.', [{ text: 'OK'},])
             return
         }
-        
         let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
         const response = await fetch(`${requestURL}`, {
             method: 'PUT',
@@ -46,6 +45,29 @@ export default class EditTodayModal extends Component {
         })
     }
 
+    updateTemp = (temp) => {
+        this.setState({
+            ...this.state,
+            temp: temp
+        })
+
+    }
+
+    deleteRequest = async() => {
+        //add ALERT? are you sure you want to delete this entire entry?
+        console.log("delete id: ", this.props.selectedDay.id)
+        let deleteEntryId = this.props.selectedDay.id
+        let requestURL = 'http://localhost:3000/entries/' + `${deleteEntryId}`
+        const response = await fetch(`${requestURL}`, {
+            method: 'DELETE',
+        })
+        console.log("response: ", response)
+        const jsonResponse = await response.json()
+        
+        console.log("jsonResponse: ", jsonResponse)
+        this.props.updateTodaysEntryOnEdit()
+    }
+
     render() {
         const {date, id} = this.props.selectedDay
         return (
@@ -65,7 +87,11 @@ export default class EditTodayModal extends Component {
 
                     <View style={styles.inputFields}>
                         <Text style={styles.statusInfo}>Temp: </Text>
-                        <TextInput value={this.state.temp === undefined ? this.props.selectedDay.temp : this.state.temp} style={styles.input} onChangeText={(text) => { this.setState({ ...this.state, temp: text }) }} />
+                        <TextInput 
+                        value={this.state.temp === undefined ? this.props.selectedDay.temp : this.state.temp} 
+                        style={styles.input} 
+                        onChangeText={(text) => {this.updateTemp(text)}} 
+                        />
                     </View>
 
                     <View style={styles.inputFields}>
@@ -89,7 +115,7 @@ export default class EditTodayModal extends Component {
                         <Button 
                             block 
                             light 
-                            onPress={this.signUpHandler} 
+                            onPress={this.deleteRequest} 
                             style={styles.button}
                         >
                             <Text style={styles.deleteButtonText}>Delete</Text>

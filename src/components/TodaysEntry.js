@@ -85,7 +85,11 @@ export default class TodaysEntry extends React.Component {
                 console.log('fetch catch on entry id', error)
             }
             
-            
+            this.setState({
+                ...this.state,
+                tempForToday: '',
+                flowForToday: false
+            })
             this.props.updateTodaysEntryOnEdit()
         }
 
@@ -210,7 +214,7 @@ export default class TodaysEntry extends React.Component {
                     width: "100%",
                     justifyContent: "center",
                     alignItems: "center",
-                    marginBottom: 8,
+                    marginBottom: 10,
                 },
                 inputContainer: {
                     flexDirection: "row",
