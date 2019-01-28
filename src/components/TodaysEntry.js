@@ -57,7 +57,7 @@ export default class TodaysEntry extends React.Component {
                 return
             }
             let currentDate = this.formatDate(this.props.selectedDay).trim()
-            let requestURL = 'http://localhost:3000/entries/' + `${this.props.userId}`
+            let requestURL = `https://tempomobile.herokuapp.com/entries/` + `${this.props.userId}`
             try{
                 const response = await fetch(`${requestURL}`, {
                     method: 'POST',
@@ -116,6 +116,10 @@ export default class TodaysEntry extends React.Component {
         )
     }
 
+    syncWithTherm = () =>{
+        this.props.updateTodaysEntryOnEdit()
+    }
+
     
     entryDoesNotExist = (style) => {
         return(
@@ -133,6 +137,9 @@ export default class TodaysEntry extends React.Component {
                             style={style.tempInput}
                             onChangeText={(text) => { this.updatetempForToday(text) }} 
                         />
+                        <Button small block light style={style.button} onPress={this.syncWithTherm}>
+                            <Text style={style.buttonText}>Sync with Thermometer</Text>
+                        </Button>
                     </View>
 
                     <View style={style.inputFields}>
@@ -160,9 +167,7 @@ export default class TodaysEntry extends React.Component {
 
     updateEntry = async() =>{
         let entryId = this.props.entry.id
-        console.log("entryID to update: ", entryId)
-        let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
-        console.log("about to request PUT to: ", requestURL)
+        let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${entryId}`
         const response = await fetch(`${requestURL}`, {
             method: 'PUT',
             headers: {
@@ -242,7 +247,7 @@ export default class TodaysEntry extends React.Component {
                     color: "black"
                 },
                 tempInput: {
-                    width: "50%",
+                    width: "30%",
                     borderColor: "red",
                     borderWidth: 1,
                     padding: 4,
@@ -256,6 +261,16 @@ export default class TodaysEntry extends React.Component {
                     alignItems: "center"
 
                 },
+                buttonText: {
+                    fontFamily: "HelveticaNeue",
+                    color: "midnightblue",
+                    fontSize: 10,
+                    padding: 2,
+                },
+                button: {
+                    width: "40%",
+                    margin: 2,
+                }
             }
             return this.entryDoesNotExist(noEntryStyle)
         }

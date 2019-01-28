@@ -17,7 +17,7 @@ export default class EditTodayModal extends Component {
             Alert.alert('Error','Please enter your changes before submitting.', [{ text: 'OK'},])
             return
         }
-        let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
+        let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${entryId}`
         const response = await fetch(`${requestURL}`, {
             method: 'PUT',
             headers: {
@@ -57,7 +57,7 @@ export default class EditTodayModal extends Component {
         //add ALERT? are you sure you want to delete this entire entry?
         console.log("delete id: ", this.props.selectedDay.id)
         let deleteEntryId = this.props.selectedDay.id
-        let requestURL = 'http://localhost:3000/entries/' + `${deleteEntryId}`
+        let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${deleteEntryId}`
         const response = await fetch(`${requestURL}`, {
             method: 'DELETE',
         })

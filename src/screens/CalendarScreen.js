@@ -71,7 +71,7 @@ class CalendarScreen extends Component {
     //GET request for entries then set state with response
     //calls createMarkedDates to combine objects created by helper functions to create the marked Dates object for the calendar. 
     getEntries = async () => {
-        const response = await fetch('http://localhost:3000/entries/1')
+        const response = await fetch('https://tempomobile.herokuapp.com/entries/1')
         const jsonResponse = await response.json()
         console.log("jsonResponse: ", jsonResponse)
         let sortedEntriesByDate = jsonResponse
@@ -87,7 +87,7 @@ class CalendarScreen extends Component {
 
     //GET request for user info and set state with name and cycle length
     getUserInfo = async () => {
-        const response = await fetch('http://localhost:3000/users/1')
+        const response = await fetch('https://tempomobile.herokuapp.com/users/1')
         const jsonResponse = await response.json()
         this.setState({
             ...this.state,
@@ -506,7 +506,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "stretch"
+        alignItems: "stretch",
+        
     },
     greetingSection: {
         height: "10%",

@@ -18,7 +18,7 @@ export default class EditAnotherDayModal extends Component {
             return
         }
 
-        let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
+        let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${entryId}`
         const response = await fetch(`${requestURL}`, {
             method: 'PUT',
             headers: {
