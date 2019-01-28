@@ -105,26 +105,26 @@ const styles = StyleSheet.create({
     buttonText: {
         fontFamily: "HelveticaNeue",
         color: "midnightblue",
-        fontSize: 20,
+        fontSize: 16,
     },
     deleteButtonText: {
         fontFamily: "HelveticaNeue",
         color: "red",
-        fontSize: 20,
+        fontSize: 16,
     },
     button: {
         margin: 2,
         width: "30%"
     },
     dateContainer: {
-        marginBottom: 35,
+        marginBottom: 28,
     },
     date: {
-        fontSize: 28,
+        fontSize: 20,
         fontFamily: "HelveticaNeue-Light"
     },
     statusInfo: {
-        fontSize: 20,
+        fontSize: 16,
         fontFamily: "HelveticaNeue-Light"
     },
     inputFields: {
@@ -140,6 +140,6 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 8,
         fontFamily: "HelveticaNeue-Light",
-        fontSize: 20
+        fontSize: 16
     },
 })
