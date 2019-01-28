@@ -42,11 +42,7 @@ export default class TodaysEntry extends React.Component {
     }
 
     postNewEntry = async() => {
-        console.log("post new entry")
-        console.log("temp: ", this.state.tempForToday)
-        console.log("flow: ", this.state.flowForToday)
         let temp = parseInt(this.state.tempForToday)
-        console.log("typeof temp:", typeof temp, "temp: ", temp)
         if(temp > 100){
             Alert.alert('Error', 'Please enter a valid temperature. Do not record your temperature today if you have a fever.', [{ text: 'OK' },])
             return
@@ -55,16 +51,13 @@ export default class TodaysEntry extends React.Component {
             Alert.alert('Error', 'Please enter a valid temperature.', [{ text: 'OK' },])
             return
         }else{
-            console.log("this.props: ", this.props)
             //check to make sure a change has been made, show an error if not.
             if (this.state.temp === '') {
                 Alert.alert('Error', 'Please add both temperature and your menstruation before submitting.', [{ text: 'OK' },])
                 return
             }
             let currentDate = this.formatDate(this.props.selectedDay).trim()
-            console.log("date formatted: ", currentDate)
             let requestURL = 'http://localhost:3000/entries/' + `${this.props.userId}`
-            console.log("requestURL: ", requestURL)
             try{
                 const response = await fetch(`${requestURL}`, {
                     method: 'POST',
@@ -78,13 +71,11 @@ export default class TodaysEntry extends React.Component {
                         temp: this.state.tempForToday
                     })
                 })
-                console.log('Response', response)
                 const jsonResponse = await response.json()
                 console.log("jsonresponse: ", jsonResponse)
             } catch(error){
                 console.log('fetch catch on entry id', error)
             }
-            
             this.setState({
                 ...this.state,
                 tempForToday: '',
@@ -92,7 +83,6 @@ export default class TodaysEntry extends React.Component {
             })
             this.props.updateTodaysEntryOnEdit()
         }
-
     }
 
     completeEntryExists = (props, style) => {
@@ -141,7 +131,8 @@ export default class TodaysEntry extends React.Component {
                         <TextInput
                             value={this.state.tempForToday}
                             style={style.tempInput}
-                            onChangeText={(text) => {this.updatetempForToday(text)}} />
+                            onChangeText={(text) => { this.updatetempForToday(text) }} 
+                        />
                     </View>
 
                     <View style={style.inputFields}>
@@ -167,9 +158,66 @@ export default class TodaysEntry extends React.Component {
         )
     }
 
-    getEntryFormat = (temp, flow) => {
-        //console.log("getting entry format")
+    updateEntry = async() =>{
+        let entryId = this.props.entry.id
+        console.log("entryID to update: ", entryId)
+        let requestURL = 'http://localhost:3000/entries/' + `${entryId}`
+        console.log("about to request PUT to: ", requestURL)
+        const response = await fetch(`${requestURL}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                flow: this.state.flowForToday,
+            })
+        })
+        const jsonResponse = await response.json()
+        console.log("jsonResponse: ", jsonResponse)
+        this.props.updateTodaysEntryOnEdit()
+    }
 
+    tempButNoFlow = (props, style) => {
+        return (
+            <View>
+                <View style={this.styles.container}>
+
+                    <View style={this.styles.reminderContainer}>
+                        <Text style={style.reminderText}>Please record your flow for today.</Text>
+                    </View>
+
+                    <View style={style.inputFields}>
+                        <Text style={style.tempText}>Temp: </Text>
+                        <Text style={style.tempInput}>
+                            {props.entry.temp}
+                        </Text>
+                    </View>
+
+                    <View style={style.inputFields}>
+                        <Text style={style.text}>Menstruating: No </Text>
+                        <Switch
+                            value={this.state.flowForToday}
+                            onValueChange={this.updateFlowForToday}
+                        />
+                        <Text style={style.text}> Yes</Text>
+                    </View>
+
+                </View>
+
+                <View style={this.styles.buttonContainer}>
+                    <Button small block light onPress={this.updateEntry}>
+                        <Text style={this.styles.buttonText}>Submit</Text>
+                    </Button>
+                </View>
+
+            </View>
+
+
+        )
+    }
+
+    getEntryFormat = (temp, flow) => {
         //if temp and flow are missing, please record your "entry" and make all text red
         //console.log("temp: ", temp, "flow: ", flow)
         if(temp === undefined && flow === undefined){
@@ -187,6 +235,11 @@ export default class TodaysEntry extends React.Component {
                     fontSize: 14,
                     fontFamily: "HelveticaNeue-Light",
                     color: "red"
+                },
+                tempText: {
+                    fontSize: 14,
+                    fontFamily: "HelveticaNeue-Light",
+                    color: "black"
                 },
                 tempInput: {
                     width: "50%",
@@ -207,7 +260,7 @@ export default class TodaysEntry extends React.Component {
             return this.entryDoesNotExist(noEntryStyle)
         }
         //if the complete entry already exists, show the data with the edit button.
-        else if (temp !== undefined && flow !== undefined){
+        else if (temp !== undefined && (flow !== undefined && flow!== null)){
             console.log("entry has already been completed")
             let completeEntryStyle = {
                 container: {
@@ -226,35 +279,59 @@ export default class TodaysEntry extends React.Component {
                      fontFamily: "HelveticaNeue-Light",
                      color: "black"
                  },
-                    tempInput: {
-                        width: "50%",
-                        borderColor: "grey",
-                        borderWidth: 1,
-                        padding: 4,
-                        margin: 2,
-                        fontFamily: "HelveticaNeue-Light",
-                        fontSize: 15
-                    },
+                tempInput: {
+                    width: "50%",
+                    borderColor: "grey",
+                    borderWidth: 1,
+                    padding: 4,
+                    margin: 2,
+                    fontFamily: "HelveticaNeue-Light",
+                    fontSize: 15
+                },
 
             }
             return this.completeEntryExists(this.props, completeEntryStyle)
         }
-
         //if temp exists but flow hasn't been recorded yet
+        else if ((temp !== null && temp !== undefined) && flow === null){
+            console.log("temp exists but flow needs to be recorded")
+            noFlowStyle = {
+                reminderContainer: {
+                    alignItems: "center",
+                },
+                reminderText: {
+                    fontSize: 16,
+                    fontFamily: "HelveticaNeue-Light",
+                    color: "red",
+                },
+                text: {
+                    fontSize: 14,
+                    fontFamily: "HelveticaNeue-Light",
+                    color: "red"
+                },
+                tempInput: {
+                    width: "50%",
+                    borderColor: "grey",
+                    borderWidth: 1,
+                    padding: 4,
+                    margin: 2,
+                    fontFamily: "HelveticaNeue-Light",
+                    fontSize: 15
+                },
+                inputFields: {
+                    flexDirection: "row",
+                    padding: 5,
+                    alignItems: "center"
 
-        //if flow exists but temp hasn't been recorded yet. 
+                },
+            }
+            return this.tempButNoFlow(this.props, noFlowStyle)
+        }
+        //if flow exists but temp hasn't been recorded yet.
+        else if (temp === null && flow !== null){
+            console.log("flow exists but temp needs to be recorded")
+        }
     }
-
-    // getColor = (temp, flow) => {
-    //     console.log("getColor entryStatus: ", this.state.entryStatus)
-    //     if (temp === undefined && flow === undefined) {
-    //         return "red"
-    //     }
-    //     //if the complete entry already exists, show the data with the edit button.
-    //     else if (temp !== undefined && flow !== undefined) {
-    //         return "black"
-    //     }
-    // }
 
     closeEditModal = () => {
         console.log("close Edit Modal")
@@ -282,29 +359,18 @@ export default class TodaysEntry extends React.Component {
 
         return (
             <View>
-
                 {this.getEntryFormat(temp, flow)}
-
                 <EditTodayModal 
                     visible={this.state.editModalVisible} 
                     closeEditModal={this.closeEditModal} 
                     selectedDay={this.props.entry} 
                     updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}
                 />
-
             </View>
         )
     }
 
     styles = {
-        // reminderText: {
-        //     fontSize: 16,
-        //     fontFamily: "HelveticaNeue-Light",
-        //     color: this.getColor(this.props.entry.temp, this.props.entry.flow),
-        // },
-        // reminderContainer: {
-        //     alignItems: "center",
-        // },
         container: {
             width: "100%",
             justifyContent: "center",
@@ -315,20 +381,6 @@ export default class TodaysEntry extends React.Component {
             color: "midnightblue",
             fontSize: 16,
         },
-        // tempInput: {
-        //     width: "50%",
-        //     borderColor: this.getColor(this.props.entry.temp, this.props.entry.flow),
-        //     borderWidth: 1,
-        //     padding: 4,
-        //     margin: 2,
-        //     fontFamily: "HelveticaNeue-Light",
-        //     fontSize: 15
-        // },
-        // temp: {
-        //     fontSize: 15,
-        //     fontFamily: "HelveticaNeue-Light",
-        //     color: "black",
-        // },
         flowInput: {
             width: "38%",
             borderColor: "grey",
@@ -338,36 +390,9 @@ export default class TodaysEntry extends React.Component {
             fontFamily: "HelveticaNeue-Light",
             fontSize: 15
         },
-        // inputContainer: {
-        //     flexDirection: "row",
-        //     alignItems: "center",
-        //     justifyContent: "space-between"
-        // },
         buttonContainer: {
             margin: 5
         },
-        // statusInfo: {
-        //     fontSize: 14,
-        //     fontFamily: "HelveticaNeue-Light",
-        //     color: this.getColor(this.props.entry.temp, this.props.entry.flow)
-        // },
-        // inputFields: {
-        //     flexDirection: "row",
-        //     padding: 5,
-        //     alignItems: "center"
-
-        // },
-        // input: {
-        //     width: "30%",
-        //     borderColor: this.getColor(this.props.entry.temp, this.props.entry.flow),
-        //     borderWidth: 1,
-        //     padding: 8,
-        //     margin: 3,
-        //     fontFamily: "HelveticaNeue-Light",
-        //     fontSize: 14,
-        //     color: "black"
-        // },
-
     }
 }
 
