@@ -52,6 +52,11 @@ export default class CalendarModal extends Component {
         
     }
 
+    deleteAnotherEntryOnEdit = () => {
+        this.closeEditModal()
+        this.closeThisModal()
+    }
+
     closeThisModal = () => {
         this.setState({
             ...this.state,
@@ -117,6 +122,7 @@ export default class CalendarModal extends Component {
                     selectedDay={this.props.selectedDay} 
                     closeEditModal={this.closeEditModal} 
                     updateAnotherEntryOnEdit={this.updateAnotherEntryOnEdit} 
+                    deleteAnotherEntryOnEdit={this.deleteAnotherEntryOnEdit}
                 />
 
             </Modal>

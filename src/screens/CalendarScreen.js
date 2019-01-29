@@ -31,21 +31,24 @@ class CalendarScreen extends Component {
     //4) calculate the average day in the cycle that the indicator day occurs & predicted High Risk Days.
     //5) if there is a change in the average cycle length or indicator day, POST the new cycle length or indictor day to user data and update it in state.
     componentDidMount = async() => {
-        await this.loadCalendar()
-    }
-
-    loadCalendar = async() => {
         let today = new Date(Date.now()).toString().substring(0, 15)
+        console.log("today: ", today)
+        //let today = new Date('2019-02-06T00:00:00-07:00').toString().substring(0, 15)
         this.setState({
             ...this.state,
             currentDate: today
         })
+        await this.loadCalendar()
+    }
+
+    loadCalendar = async() => {
+       
         await this.getEntries()
         await this.getUserInfo()
-        this.addPredictionsToMarkedDates()
-        let entryForToday = await this.findEntry(`${this.formatDate(today)}`)
+        await this.addPredictionsToMarkedDates()
+        let entryForToday = await this.findEntry(`${this.formatDate(this.state.currentDate)}`)
         console.log("entry for Today: ", entryForToday)
-        let riskForToday = await this.getRiskForToday(this.formatDate(today))
+        let riskForToday = await this.getRiskForToday(this.formatDate(this.state.currentDate))
         console.log("riskforCurrentDate: ", riskForToday)
         this.setState({
             ...this.state,
@@ -76,7 +79,7 @@ class CalendarScreen extends Component {
         console.log("jsonResponse: ", jsonResponse)
         let sortedEntriesByDate = jsonResponse
         sortedEntriesByDate.sort((a, b) => { return (Date.parse(a.date) > Date.parse(b.date)) ? 1 : ((Date.parse(b.date) > Date.parse(a.date)) ? -1 : 0)})
-        console.log("sortedEntriesById: ", sortedEntriesByDate)
+        console.log("sortedEntriesByDate: ", sortedEntriesByDate)
         let dates = this.createMarkedDates(jsonResponse)
         this.setState({
             ...this.state,
@@ -371,12 +374,14 @@ class CalendarScreen extends Component {
     //takes a dateString and returns the risk of pregnancy for that date. 
     //returns a string: Low, Moderate, High or Very High
     getRiskForToday = (dateString) =>{
+        console.log("getting risk for today: ", dateString)
         let markedDateEntry
         for(entry in this.state.markedDates){
             if(entry === dateString){
                 markedDateEntry = this.state.markedDates[entry]
             }
         }
+        console.log("entry for today: ", markedDateEntry)
         if(markedDateEntry === undefined){
             return {risk: "Low", color: 'black'}
         }
@@ -388,11 +393,20 @@ class CalendarScreen extends Component {
             case '#ff4c00':
                 retObj = { risk: "Very High", color: '#ff4c00' }
                 break
+            case '#ff9f76':
+                retObj = { risk: "Very High", color: '#ff4c00' }
+                break
             case '#ff8c00':
+                retObj = { risk: "High", color: '#ff8c00' }
+                break
+            case '#ffc176':
                 retObj = { risk: "High", color: '#ff8c00' }
                 break
             case '#ffcc00':
                 retObj = { risk: "Moderate", color: '#ffcc00'}
+                break
+            case '#ffeb9d':
+                retObj = { risk: "Moderate", color: '#ffcc00' }
                 break
             default:
                 break
@@ -446,6 +460,16 @@ class CalendarScreen extends Component {
 
 
     render() {
+        console.log("this.state.markedDates: ", this.state.markedDates)
+        let markedDatesFromState = Object.assign(this.state.markedDates, { 
+            "2019-02-03": { startingDay: true, color: "#ffeb9d" },
+            "2019-02-04": { color: "#ffeb9d" },
+            "2019-02-05": { color: "#ffc176" },
+            "2019-02-06": { color: "#ffc176" },
+            "2019-02-07": { color: "#ff9f76" },
+            "2019-02-08": { endingDay: true, color: "#ff9f76" }
+        })
+        console.log("markedDatesFromState: ", markedDatesFromState)
         return (
             <View style={styles.container}>
 
@@ -470,24 +494,34 @@ class CalendarScreen extends Component {
                         riskForCurrentDate={this.state.riskForCurrentDate}
                     />
                 </View>
-                
+
                 <Calendar style={styles.calendar}
+
                     // Max amount of months allowed to scroll to the past. Default = 50
-                    pastScrollRange={50}
+                    //pastScrollRange={50}
                     // Max amount of months allowed to scroll to the future. Default = 50
-                    futureScrollRange={50}
+                    //futureScrollRange={50}
                     // Enable or disable scrolling of calendar list
-                    scrollEnabled={true}
+                    //scrollEnabled={true}
                     // Enable or disable vertical scroll indicator. Default = false
-                    showScrollIndicator={true}
+                    //showScrollIndicator={true}
                     // Collection of dates that have to be colored in a special way. Default = {}
                     markedDates={
-                        this.state.markedDates ? this.state.markedDates : {}
+                        markedDatesFromState 
+                        
                     }
+                    // markedDates={{
+                    //     '2019-02-05': {color: "blue"},
+                    //     '2019-02-06': { color: "blue" },
+                    //     '2019-02-07': { color: "blue" },
+                    //     '2019-02-08': { color: "blue" },
+                    // }
+                    // }
                     // Date marking style [simple/period/multi-dot/custom]. Default = 'simple'
                     markingType={'period'}
                     onDayPress={(day) => { this.showModal(day); console.log('selected day', day) }}
                 />
+        
 
                 <CalendarModal 
                     visible={this.state.modalVisible} 
@@ -529,3 +563,5 @@ const styles = StyleSheet.create({
 })
 
 export default CalendarScreen;
+
+        
