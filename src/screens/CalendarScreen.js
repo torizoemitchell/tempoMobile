@@ -461,15 +461,15 @@ class CalendarScreen extends Component {
 
     render() {
         console.log("this.state.markedDates: ", this.state.markedDates)
-        let markedDatesFromState = Object.assign(this.state.markedDates, { 
-            "2019-02-03": { startingDay: true, color: "#ffeb9d" },
-            "2019-02-04": { color: "#ffeb9d" },
-            "2019-02-05": { color: "#ffc176" },
-            "2019-02-06": { color: "#ffc176" },
-            "2019-02-07": { color: "#ff9f76" },
-            "2019-02-08": { endingDay: true, color: "#ff9f76" }
-        })
-        console.log("markedDatesFromState: ", markedDatesFromState)
+        // let markedDatesFromState = Object.assign(this.state.markedDates, { 
+        //     "2019-02-03": { startingDay: true, color: "#ffeb9d" },
+        //     "2019-02-04": { color: "#ffeb9d" },
+        //     "2019-02-05": { color: "#ffc176" },
+        //     "2019-02-06": { color: "#ffc176" },
+        //     "2019-02-07": { color: "#ff9f76" },
+        //     "2019-02-08": { endingDay: true, color: "#ff9f76" }
+        // })
+        //console.log("markedDatesFromState: ", markedDatesFromState)
         return (
             <View style={styles.container}>
 
@@ -507,8 +507,8 @@ class CalendarScreen extends Component {
                     //showScrollIndicator={true}
                     // Collection of dates that have to be colored in a special way. Default = {}
                     markedDates={
-                        markedDatesFromState 
-                        
+                        //markedDatesFromState 
+                        this.state.markedDates
                     }
                     // markedDates={{
                     //     '2019-02-05': {color: "blue"},
