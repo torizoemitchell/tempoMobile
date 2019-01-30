@@ -53,20 +53,24 @@ export default class EditTodayModal extends Component {
 
     }
 
-    deleteRequest = async() => {
-        //add ALERT? are you sure you want to delete this entire entry?
-        console.log("delete id: ", this.props.selectedDay.id)
-        let deleteEntryId = this.props.selectedDay.id
-        let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${deleteEntryId}`
-        const response = await fetch(`${requestURL}`, {
-            method: 'DELETE',
-        })
-        console.log("response: ", response)
-        const jsonResponse = await response.json()
-        
-        console.log("jsonResponse: ", jsonResponse)
-        this.props.updateTodaysEntryOnEdit()
+    deleteTodaysEntry = () =>{
+        this.props.deleteTodaysEntry(this.props.selectedDay.id)
     }
+
+    // deleteRequest = async() => {
+    //     //add ALERT? are you sure you want to delete this entire entry?
+    //     console.log("delete id: ", this.props.selectedDay.id)
+    //     let deleteEntryId = this.props.selectedDay.id
+    //     let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${deleteEntryId}`
+    //     const response = await fetch(`${requestURL}`, {
+    //         method: 'DELETE',
+    //     })
+    //     console.log("response: ", response)
+    //     const jsonResponse = await response.json()
+        
+    //     console.log("jsonResponse: ", jsonResponse)
+    //     this.props.updateTodaysEntryOnEdit()
+    // }
 
     render() {
         const {date, id} = this.props.selectedDay
@@ -115,7 +119,7 @@ export default class EditTodayModal extends Component {
                         <Button 
                             block 
                             light 
-                            onPress={this.deleteRequest} 
+                            onPress={this.deleteTodaysEntry} 
                             style={styles.button}
                         >
                             <Text style={styles.deleteButtonText}>Delete</Text>

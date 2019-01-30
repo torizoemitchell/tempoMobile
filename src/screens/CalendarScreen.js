@@ -18,7 +18,6 @@ class CalendarScreen extends Component {
         userEntries: [],
         indicatorDates: [],
         firstDaysOfPeriods: [],
-        //predictedFirstDaysOfPeriods: [],
         markedDates: {},
         modalVisible: false,
         selectedDay: {},
@@ -387,7 +386,6 @@ class CalendarScreen extends Component {
     //takes a dateString and returns the risk of pregnancy for that date. 
     //returns a string: Low, Moderate, High or Very High
     getRiskForToday = (date) =>{
-        console.log("date: ", date)
         let dateString = this.formatDate(date)
         let markedDateEntry
         for(entry in this.state.markedDates){
@@ -395,7 +393,6 @@ class CalendarScreen extends Component {
                 markedDateEntry = this.state.markedDates[entry]
             }
         }
-        console.log("entry for today: ", markedDateEntry)
         if(markedDateEntry === undefined){
             return {risk: "Low", color: 'black'}
         }
@@ -464,6 +461,7 @@ class CalendarScreen extends Component {
     }
 
     updateTodaysEntryOnEdit = () => {
+        console.log("updateTodaysEntryOnEdit called")
         this.loadCalendar()
     }
 
@@ -472,18 +470,30 @@ class CalendarScreen extends Component {
         this.closeModal()
     }
 
+    deleteTodaysEntry = async(id) => {
+        console.log("delete entry from calendar screen")
+        console.log("id to delete from calendar screen: ", id)
+        //add ALERT? are you sure you want to delete this entire entry?
+        let deleteEntryId = id
+        let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${deleteEntryId}`
+        const response = await fetch(`${requestURL}`, {
+            method: 'DELETE',
+        })
+        console.log("response: ", response)
+        const jsonResponse = await response.json()
+
+        console.log("jsonResponse: ", jsonResponse)
+        this.setState({
+            ...this.state,
+            entryForCurrentDate: -1,
+        })
+        
+
+    }
+
 
     render() {
-        console.log("this.state.markedDates: ", this.state.markedDates)
-        // let markedDatesFromState = Object.assign(this.state.markedDates, { 
-        //     "2019-02-03": { startingDay: true, color: "#ffeb9d" },
-        //     "2019-02-04": { color: "#ffeb9d" },
-        //     "2019-02-05": { color: "#ffc176" },
-        //     "2019-02-06": { color: "#ffc176" },
-        //     "2019-02-07": { color: "#ff9f76" },
-        //     "2019-02-08": { endingDay: true, color: "#ff9f76" }
-        // })
-        //console.log("markedDatesFromState: ", markedDatesFromState)
+        console.log("this.state.entryForCurrentDate: ", this.state.entryForCurrentDate)
         return (
             <View style={styles.container}>
 
@@ -500,6 +510,7 @@ class CalendarScreen extends Component {
                         entry={this.state.entryForCurrentDate} 
                         updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}
                         selectedDay={this.state.currentDate}
+                        deleteTodaysEntry={this.deleteTodaysEntry}
                     />
                 </View>
 

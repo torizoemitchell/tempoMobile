@@ -277,6 +277,7 @@ export default class TodaysEntry extends React.Component {
         //if the complete entry already exists, show the data with the edit button.
         else if (temp !== undefined && (flow !== undefined && flow!== null)){
             console.log("entry has already been completed")
+            console.log("temp: ", temp, "flow: ", flow)
             let completeEntryStyle = {
                 container: {
                     width: "100%",
@@ -366,6 +367,12 @@ export default class TodaysEntry extends React.Component {
         this.props.updateTodaysEntryOnEdit()
     }
 
+    deleteTodaysEntry = (id) => {
+        console.log("id from todays entry to delete: ", id)
+        this.closeEditModal()
+        this.props.deleteTodaysEntry(id)
+    }
+
     render(){
         const {
             flow,
@@ -380,6 +387,7 @@ export default class TodaysEntry extends React.Component {
                     closeEditModal={this.closeEditModal} 
                     selectedDay={this.props.entry} 
                     updateTodaysEntryOnEdit={this.updateTodaysEntryOnEdit}
+                    deleteTodaysEntry={this.deleteTodaysEntry}
                 />
             </View>
         )
