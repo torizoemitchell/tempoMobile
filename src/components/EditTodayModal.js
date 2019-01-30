@@ -68,12 +68,6 @@ export default class EditTodayModal extends Component {
                 onDismiss: () => false,
             },
         )
-
-        
-
-        
-      
-        
     }
 
 
@@ -164,7 +158,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontFamily: "HelveticaNeue",
         color: "midnightblue",
-        fontSize: 16,
+        fontSize: 18,
     },
     deleteButtonText: {
         fontFamily: "HelveticaNeue",
@@ -179,11 +173,11 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     date: {
-        fontSize: 20,
+        fontSize: 26,
         fontFamily: "HelveticaNeue-Light"
     },
     statusInfo: {
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: "HelveticaNeue-Light"
     },
     inputFields: {
@@ -199,6 +193,6 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 8,
         fontFamily: "HelveticaNeue-Light",
-        fontSize: 16
+        fontSize: 18
     },
 })

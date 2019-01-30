@@ -46,21 +46,6 @@ export default class EditAnotherDayModal extends Component {
         })
     }
 
-    deleteRequest = async () => {
-        //add ALERT? are you sure you want to delete this entire entry?
-        console.log("delete id: ", this.props.selectedDay.id)
-        let deleteEntryId = this.props.selectedDay.id
-        let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${deleteEntryId}`
-        const response = await fetch(`${requestURL}`, {
-            method: 'DELETE',
-        })
-        console.log("response: ", response)
-        const jsonResponse = await response.json()
-
-        console.log("jsonResponse: ", jsonResponse)
-        this.props.deleteAnotherEntryOnEdit()
-    }
-
     render() {
         const { date, id } = this.props.selectedDay
         return (
@@ -86,9 +71,6 @@ export default class EditAnotherDayModal extends Component {
                     <View style={styles.buttonContainer}>
                         <Button block light onPress={this.updateRequest} style={styles.button}>
                             <Text style={styles.buttonText}>Submit</Text>
-                        </Button>
-                        <Button block light onPress={this.deleteRequest} style={styles.button}>
-                            <Text style={styles.deleteButtonText}>Delete</Text>
                         </Button>
                         <Button block light onPress={this.props.closeEditModal} style={styles.button}>
                             <Text style={styles.buttonText}>Close</Text>
@@ -120,12 +102,12 @@ const styles = StyleSheet.create({
     buttonText: {
         fontFamily: "HelveticaNeue",
         color: "midnightblue",
-        fontSize: 16,
+        fontSize: 18,
     },
     deleteButtonText: {
         fontFamily: "HelveticaNeue",
         color: "red",
-        fontSize: 16,
+        fontSize: 18,
     },
     button: {
         margin: 2,
@@ -135,11 +117,11 @@ const styles = StyleSheet.create({
         marginBottom: 28,
     },
     date: {
-        fontSize: 20,
+        fontSize: 26,
         fontFamily: "HelveticaNeue-Light"
     },
     statusInfo: {
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: "HelveticaNeue-Light"
     },
     inputFields: {
@@ -155,6 +137,6 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 8,
         fontFamily: "HelveticaNeue-Light",
-        fontSize: 16
+        fontSize: 18
     },
 })

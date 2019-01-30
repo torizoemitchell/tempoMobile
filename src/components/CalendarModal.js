@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontFamily: "HelveticaNeue",
         color: "midnightblue",
-        fontSize: 16,
+        fontSize: 18,
     },
     button: {
         margin: 2,
@@ -159,11 +159,11 @@ const styles = StyleSheet.create({
         marginBottom: 35,
     },
     date: {
-        fontSize: 20,
+        fontSize: 26,
         fontFamily: "HelveticaNeue-Light"
     },
     statusInfo: {
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: "HelveticaNeue-Light"
     },
     tempInput: {
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 3,
         fontFamily: "HelveticaNeue-Light",
-        fontSize: 16,
+        fontSize: 18,
         //textDecorationLine: "underline",
     },
     tempContainer: {
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 3,
         fontFamily: "HelveticaNeue-Light",
-        fontSize: 16,
+        fontSize: 18,
         //textDecorationLine: "underline"
     }
 })
