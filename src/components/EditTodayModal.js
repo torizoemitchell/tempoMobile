@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Text, TouchableHighlight, View, Alert, StyleSheet, Switch, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Button } from 'native-base'
+//import { AsyncAlert } from 'react-native-alert-async'
 
 export default class EditTodayModal extends Component {
 
@@ -53,24 +54,28 @@ export default class EditTodayModal extends Component {
 
     }
 
-    deleteTodaysEntry = () =>{
-        this.props.deleteTodaysEntry(this.props.selectedDay.id)
+
+    deleteTodaysEntry = async() =>{
+        Alert.alert(
+            'Are you sure you want to delete this entry?',
+            'This cannot be undone.',
+            [
+                { text: 'Yes, Delete.', onPress: () => { this.props.deleteTodaysEntry(this.props.selectedDay.id)} },
+                { text: 'No! Do Not Delete.', onPress: () => {} },
+            ],
+            {
+                cancelable: true,
+                onDismiss: () => false,
+            },
+        )
+
+        
+
+        
+      
+        
     }
 
-    // deleteRequest = async() => {
-    //     //add ALERT? are you sure you want to delete this entire entry?
-    //     console.log("delete id: ", this.props.selectedDay.id)
-    //     let deleteEntryId = this.props.selectedDay.id
-    //     let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${deleteEntryId}`
-    //     const response = await fetch(`${requestURL}`, {
-    //         method: 'DELETE',
-    //     })
-    //     console.log("response: ", response)
-    //     const jsonResponse = await response.json()
-        
-    //     console.log("jsonResponse: ", jsonResponse)
-    //     this.props.updateTodaysEntryOnEdit()
-    // }
 
     render() {
         const {date, id} = this.props.selectedDay

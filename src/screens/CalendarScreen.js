@@ -55,7 +55,7 @@ class CalendarScreen extends Component {
 
         let markedDatesWithPredictions = await this.addPredictionsToMarkedDates(markedDatesBeforePredictions, firstDaysOfPeriods, indicatorDates)
         
-        let entryForToday = await this.findEntry(`${this.formatDate(this.state.currentDate)}`)
+        let entryForToday = await this.findEntry(`${this.formatDate(this.state.currentDate)}`, userEntries)
         console.log("entry for Today: ", entryForToday)
         let riskForToday = await this.getRiskForToday(this.formatDate(this.state.currentDate))
         console.log("riskforCurrentDate: ", riskForToday)
@@ -73,13 +73,10 @@ class CalendarScreen extends Component {
 
     //takes a dateString and returns the entry from the user's entry for that day.
     //returns -1 if the entry is not found. 
-    findEntry = (dateString) => {
-        let entries = [
-            ...this.state.userEntries
-        ]
-        for(let i = 0; i < entries.length; i++){
-            if (entries[i].date == dateString) {
-                return entries[i]
+    findEntry = (dateString, userEntries) => {
+        for(let i = 0; i < userEntries.length; i++){
+            if (userEntries[i].date == dateString) {
+                return userEntries[i]
             }
         }
         return -1
@@ -471,24 +468,17 @@ class CalendarScreen extends Component {
     }
 
     deleteTodaysEntry = async(id) => {
-        console.log("delete entry from calendar screen")
-        console.log("id to delete from calendar screen: ", id)
-        //add ALERT? are you sure you want to delete this entire entry?
+        
         let deleteEntryId = id
         let requestURL = 'https://tempomobile.herokuapp.com/entries/' + `${deleteEntryId}`
         const response = await fetch(`${requestURL}`, {
             method: 'DELETE',
         })
-        console.log("response: ", response)
         const jsonResponse = await response.json()
-
-        console.log("jsonResponse: ", jsonResponse)
         this.setState({
             ...this.state,
             entryForCurrentDate: -1,
         })
-        
-
     }
 
 
