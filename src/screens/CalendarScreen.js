@@ -42,26 +42,19 @@ class CalendarScreen extends Component {
     }
 
     loadCalendar = async() => {
-        console.log("LOADING CALENDAR")
 
         //userEntries = sortedEntriesByDate
         let userEntries = await this.getEntries()
-        console.log("userEntries: ", userEntries)
 
         //userInfo = object with name and averageCycleLength properties
         let userInfo = await this.getUserInfo()
-        console.log("userInfo: ", userInfo)
 
         let createMarks = await this.createMarkedDates(userEntries)
         let markedDatesBeforePredictions = createMarks.markedDates
-        console.log("markedDatesBeforePredictions: ", markedDatesBeforePredictions)
         let firstDaysOfPeriods = createMarks.firstDaysOfPeriods
-        console.log("firstDaysOfPeriods: ", firstDaysOfPeriods)
         let indicatorDates = createMarks.indicatorDates
-        console.log("indicatorDates: ", indicatorDates)
 
         let markedDatesWithPredictions = await this.addPredictionsToMarkedDates(markedDatesBeforePredictions, firstDaysOfPeriods, indicatorDates)
-        console.log("markedDatesWithPredictions: ", markedDatesWithPredictions)
         
         let entryForToday = await this.findEntry(`${this.formatDate(this.state.currentDate)}`)
         console.log("entry for Today: ", entryForToday)
@@ -148,30 +141,19 @@ class CalendarScreen extends Component {
     //2) marked dates for high risk days perdictions
     //adds them to the marked dates object being rendered in the calendar.
     addPredictionsToMarkedDates = async(markedDates, firstDaysOfPeriods, indicatorDates) => {
-        console.log("ADDING PREDICTIONS")
         let periodDatesPredictionResults = await this.calculatePeriodPrediction(firstDaysOfPeriods)
-        console.log("periodDatesPredictionResults: ", periodDatesPredictionResults)
         let periodDatesPrediction = periodDatesPredictionResults.markedDates
-        console.log("periodDatesPrediction: ", periodDatesPrediction)
         let newFirstDaysOfPeriods = periodDatesPredictionResults.newFirstDaysOfPeriods
-        console.log("newFirstDaysOfPeriods: ", newFirstDaysOfPeriods)
         
         let highRiskDaysPrediction = await this.calculateHighRiskDaysPrediction(indicatorDates, firstDaysOfPeriods, newFirstDaysOfPeriods)
-        console.log("highRiskDaysPrediction: ", highRiskDaysPrediction)
         let newMarkedDates = Object.assign(markedDates, periodDatesPrediction, highRiskDaysPrediction)
-        // this.setState({
-        //     ...this.state,
-        //     markedDates: newMarkedDates
-        // })
-
-        console.log("newMarkedDates")
+    
         return newMarkedDates
     }
 
     //helper function called by createMarkedDates
     //returns an object that will become the marked dates object for the users period. 
     checkPeriodDays = (arrayOfEntries) =>{
-        console.log("user entries: ", arrayOfEntries)
         let markedDates = {}
         let firstDaysOfPeriods = []
         for (i = 0; i < arrayOfEntries.length - 1; i++) {
@@ -221,7 +203,6 @@ class CalendarScreen extends Component {
     //helper function called by createMarkedDates
     //returns an object that will become the marked dates object for the users High Risk Days. 
     checkHighRiskDays = (arrayOfEntries) => {
-        console.log("CHECK HR DAYS")
         let indicatorDates = []
         let markedDates = {}
         //find increase in temperature
@@ -233,7 +214,6 @@ class CalendarScreen extends Component {
                 indicatorDates.push(arrayOfEntries[i].date) 
             }
         }
-        console.log("indicator dates: ", indicatorDates)
         //create object of marked periods for high risk days
         for(let i = 0; i < indicatorDates.length; i++){
             //add the time zone when creating date object to get the correct date
@@ -275,11 +255,7 @@ class CalendarScreen extends Component {
             ModDay1 = this.formatDate(ModDay1)
             markedDates[ModDay1] = { startingDay: true, color: '#ffcc00' }
         }
-        //set state with indicator dates to use for predicting future high risk dates. 
-        this.setState({
-            ...this.state,
-            indicatorDates: indicatorDates
-        })
+      
         return {markedDates: markedDates, indicatorDates: indicatorDates}
     }
 
@@ -334,7 +310,6 @@ class CalendarScreen extends Component {
     //if the average is different than what's in the user info, POST the new info to the server and update the state.
     //returns an object that represents the marked dates for High Risk days perdictions for 3 months out.
     calculateHighRiskDaysPrediction = (indicatorDates, firstDaysOfPeriods, newFirstDaysOfPeriods) => {
-        console.log("CALCULATING HR DAYS PREDICTION")
         let markedDates = {}
         let avDayInCycleOvulOccurs
 
@@ -361,24 +336,19 @@ class CalendarScreen extends Component {
         //start from the nearest predicted first day of period if the lengths are the same. 
         
         let predictedFirstDaysOfPeriods = newFirstDaysOfPeriods
-        console.log("predictedFirstDaysOfPeriods: ", predictedFirstDaysOfPeriods)
         let startDatesMS = []
         // predictedFirstDaysOfPeriods.forEach((date) => { startDatesMS.push(new Date(date).getTime()) })
         for(let i = 0; i < predictedFirstDaysOfPeriods.length; i++){
-            console.log("PredictedFirstDaysOFPEriods[i] ", predictedFirstDaysOfPeriods[i] )
             let dateMS = new Date (predictedFirstDaysOfPeriods[i]).getTime()
-            console.log("dateMS: ", dateMS)
             startDatesMS.push(dateMS)
         }
 
         //add a different start date if the lengths are the same
         if(indicatorDates.length != firstDaysOfPeriods.length){
-            console.log("lengths are not the same")
             let startDateMS = new Date(firstDaysOfPeriods[firstDaysOfPeriods.length - 1] + 'T00:00:00-07:00').getTime()
             startDatesMS.unshift(startDateMS) 
         }
         
-        console.log("startDatesMS: ", startDatesMS)
         for (let i = 0; i < startDatesMS.length; i++) {
             //add the cycle length to the start date = predicted day on which ovul. occurs, #ff9f76
             let ovulationDayMS = startDatesMS[i] + (avDayInCycleOvulOccurs * 86400000)
@@ -410,14 +380,15 @@ class CalendarScreen extends Component {
             ModDay1 = new Date(ModDay1MS)
             markedDates[this.formatDate(ModDay1)] = { startingDay: true, color: '#ffeb9d' }
         }
-        console.log("calculatedHighRiskDaysPrediction: ", markedDates)
+        
         return markedDates
     }
 
     //takes a dateString and returns the risk of pregnancy for that date. 
     //returns a string: Low, Moderate, High or Very High
-    getRiskForToday = (dateString) =>{
-        console.log("getting risk for today: ", dateString)
+    getRiskForToday = (date) =>{
+        console.log("date: ", date)
+        let dateString = this.formatDate(date)
         let markedDateEntry
         for(entry in this.state.markedDates){
             if(entry === dateString){
@@ -534,7 +505,7 @@ class CalendarScreen extends Component {
 
                 <View style={styles.key}>
                     <Legend 
-                        riskForCurrentDate={this.state.riskForCurrentDate}
+                        riskForCurrentDate={this.getRiskForToday(this.state.currentDate)}
                     />
                 </View>
 
