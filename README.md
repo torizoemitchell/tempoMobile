@@ -12,9 +12,8 @@ Tempo helps women gain ovulation intelligence and predict future cycles. Tempo i
 
 * Javascript, HTML, CSS
 * React Native
-* Express
+* Express: [code found here](https://github.com/torizoemitchell/tempoMobile-server)
 * PostgreSQL
 * Heroku
-* ArduinoIDE
-* C++
+* C++ and Arduino IDE: [code found here](https://github.com/torizoemitchell/arduinosketches)
 * ESP32 Thing
